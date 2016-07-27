@@ -15,10 +15,21 @@ input {
 /* 整体背景 */
 
 .message-input-view {
-    position: fixed;
+    display: block;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
+    margin: auto;
+    text-align: center;
+    background-color: #f1eded;
+    height: 50px;
+}
+.message-input-view-up {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 302px;
     margin: auto;
     text-align: center;
     background-color: #f1eded;
@@ -69,6 +80,7 @@ input {
 
 .main {
     /* main绝对定位，进行内部滚动 */
+    display: block;
     position: absolute;
     top: 0px;
     bottom: 50px;
@@ -78,6 +90,17 @@ input {
     /* 增加该属性，可以增加弹性，是滑动更加顺畅 */
     -webkit-overflow-scrolling: touch;
 }
-.main .content {
+.content {
+    display: block;
     height: 800px;
+}
+
+.plugin-board-view {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: red;
+    height: 302px;
 }
