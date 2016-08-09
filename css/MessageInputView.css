@@ -16,7 +16,7 @@ input {
 
 .message-input-view {
     display: block;
-    position: absolute;
+    position: fixed;;
     left: 0;
     right: 0;
     bottom: 0;
@@ -81,18 +81,14 @@ input {
 .main {
     /* main绝对定位，进行内部滚动 */
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0px;
     bottom: 50px;
     width: 100%;
     /* 使之可以滚动 */
-    overflow-y: scroll;
+    overflow-y: auto;
     /* 增加该属性，可以增加弹性，是滑动更加顺畅 */
     -webkit-overflow-scrolling: touch;
-}
-.content {
-    display: block;
-    height: 800px;
 }
 
 .plugin-board-view {
@@ -101,6 +97,6 @@ input {
     right: 0;
     bottom: 0;
     margin: auto;
-    background-color: red;
-    height: 302px;
+    background-color: gray;
+    height: 280px;
 }

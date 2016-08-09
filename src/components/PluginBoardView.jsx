@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 
 var PluginBoardView = React.createClass({
 
+    propTypes: {
+        itemClick: React.PropTypes.func.isRequired,
+    },
+
     render: function() {
         return (
-            <div className="plugin-board-view">
-
+            <div className="plugin-board-view" onClick={this.props.itemClick}>
             </div>
         );
     }

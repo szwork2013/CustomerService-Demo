@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://csmobile.alipay.com/mypa/chat.htm?scene=app_mypa_robot -->
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" name="viewport">
+
+
+
+    <link charset="utf-8" rel="stylesheet" href="css/mypa.css" media="all">
+
+    <title>我的客服</title>
+    <script>
+        var MOBILE_SERVER = 'https://csmobile.alipay.com' || 'https://csmobile.alipay.com';
+
+        var CHANNEL_SERVER = 'https://cschannel.alipay.com' || 'https://cschannel.alipay.com';
+
+        var ASSETS_MOBILE = 'https://a.alipayobjects.com/csmobile/2.1.29';
+
+        var CLIVE_SERVER = 'https://clive.alipay.com' || 'https://clive.alipay.com';
+
+        var SESSIONID = 'csmce5769c63c724ac1a5fb8b5867ea21cd';
+
+        var SIMLILARTIPSOPEN = 'true';
+
+        var USERID = '2088';
+
+        var SOURCEAPP = '';
+
+        var APP_VER = '';
+
+        var HOTLINETEL = '95188' || '95188';
+
+        var SCENE_CODE = 'app_mypa_robot';
+
+        var PAGE_CONFIG = '{}';
+
+        var ACTIVITY = '';
+
+        var TBNK = '';
+        var CHATCONFIG = {
+            instanceId: 4,
+            userId: USERID === '2088' ? '' : USERID,
+            userName: USERID === '2088' ? '访客' : '',
+            queueHeartBeatInterval: '30' || 30,
+            onlineEnable: 'true',
+            onlineDisabledTips: '抱歉，在线人工服务时间：9:00-24:00，请联系智能客服或95188。' || '抱歉，不在人工服务时间内，清联系智能客服或拨打95188咨询。',
+            speechEnable: 'true',
+            connectInvalidInterval: '5' || 5,
+            turn2Hotline: 'true',
+            reconnectErrorMsg: '连接中断，再次@URL连接人工客服@URL',
+            connectedHeartBeatInterval: '45' || 45,
+            bizToken: 'csm05af59250d6a4802b519699ffad1a5b5',
+            ipAdress: '10.191.81.30',
+            province: '局域网',
+            city: '局域网',
+            cardAttr: '{"ONLINE":{"cardDesc":"如果还没解决您的问题，点此为您转接人工客服","cardLink":"#","cardTitle":"转接人工客服","prodIcon":"https://os.alipayobjects.com/rmsportal/phYivBPLtbegQBF.png","prodName":"我的客服"}}',
+            evaluation: '[{"code":"R1","comment":"答非所问"},{"code":"R2","comment":"内容看不懂"},{"code":"R3","comment":"方法不可行"},{"code":"R4","comment":"其他原因"}]',
+            sessionStatus: 'robot',
+            mobileicServer: 'https://mobileic.alipay.com',
+            socialParams: '',
+            keepHistory: '1',
+            bizTypeCode: '' || '',
+            themeAttr: '{"cardTitleBgColor":"#0AE","cliveAvatar":"https://zos.alipayobjects.com/rmsportal/iJDbTYJWnkeUHbd.png","msgBubbleBgColor":"#A0E75A","msgBubbleBorderColor":"#7CD053","robotAvatar":"https://zos.alipayobjects.com/rmsportal/zVBCcOVAtHFuRJJ.png","title":"我的客服"}' ||
+                '{"msgBubbleBgColor": "#0ae", "msgBubbleBorderColor": "#0ae"}',
+            prodChannel: '1'
+        };
+    </script>
+</head>
+
+<body>
+    <div class="out-wrap">
+        <!--wait-->
+        <div class="init-wait" id="initWait" style="display: none;">
+            <div class="wait-text">客官请稍等，小二这就来~</div>
+        </div>
+        <!--main-->
+        <section class="main">
+
+            <!--main content-->
+            <section class="content" id="content">
+                <div class="am-viewport">
+                    <div class="active">
+                        <section class="am-scroll" id="scroll" style="backface-visibility: hidden; transform-style: preserve-3d; height: 114px; transform: translate3d(0px, 0px, 0px);">
+                            <div class="history-msg J-history-msg visibility">下拉加载历史纪录</div>
+                            <div id="chat-wrap" class="chat-wrap">
+                                <!-- <section class="J-wrap-answer-section message-wrap robot" data-libversion="undefined" data-message-type="robot" message-wrap="" robot="">
+                                    <div class="service-avatar "><img src="https://zos.alipayobjects.com/rmsportal/zVBCcOVAtHFuRJJ.png"></div>
+                                    <div class="message ">
+                                        <div class="bubble-arrow "></div>
+                                        <article class="answer-wrap J-answer-wrap ">
+                                            <div class="J-answerContent-wrap answer-inner-wrap ">
+                                                <div>亲，我来啦！您可以用一句话描述您的问题，例如：【余额宝收益如何计算】</div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </section> -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer " id="iptBox ">
+                <div id="textWrapper " class="footer ">
+                    <div class="btn-wrap-left" id="switchBtn">
+                        <button class="icon-speak"></button>
+                    </div>
+                    <div class="ipt-wrap ">
+                        <textarea class="autoExpand " name=" " id="ipt " rows="1 " data-min-rows="1" placeholder="有问题就向我提问吧 " focusflag="NO
+                                    "></textarea>
+                    </div>
+                    <div class="btn-wrap-mid" id="switchBtn">
+                        <button class="icon-face"></button>
+                    </div>
+
+                    <div class="btn-wrap-right-plus" id="switchBtn">
+                        <button class="icon-plus"></button>
+                    </div>
+
+                    <!-- <div class="btn-wrap-right " id="subBtn ">
+                        <button disabled="disabled ">发送</button>
+                    </div> -->
+                </div>
+            </footer>
+        </section>
+    </div>
+
+    <div class="J-speech-progress audio-progress-wrapper fn-hide ">
+        <div class="audio-progress-inner ">
+            <div class="icon-wrapper ">
+                <div class="progress icon "></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript " charset="utf-8 " src="js/mypa.js"></script>
+
+</body>
+
+</html>
