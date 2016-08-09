@@ -6,7 +6,6 @@ import MessageSpeechView from '../components/MessageSpeechView';
 import PluginBoardView from '../components/PluginBoardView';
 import FaceBoardView from '../components/FaceBoardView';
 
-// import * as ActionType from '../constants/ActionType';
 
 let CustomerServiceMainUI = React.createClass({
 
@@ -43,6 +42,9 @@ let CustomerServiceMainUI = React.createClass({
         console.log('switchBtnClick');
         this.setState({showSpeechView: !this.state.showSpeechView, showPluginView: false, showFaceView: false});
     },
+    contentViewClick: function() {
+        // this.setState({showPluginView: false, showFaceView: false});
+    },
 
     pluginItemClick: function() {},
 
@@ -76,7 +78,6 @@ let CustomerServiceMainUI = React.createClass({
             faceView = <div/>
         }
 
-
         var inputView = null;
         if (this.state.showSpeechView) {
             inputView = (<MessageSpeechView switchBtnClick={this.switchBtnClick}/>);
@@ -88,7 +89,7 @@ let CustomerServiceMainUI = React.createClass({
             <div className="out-wrap">
                 <section className="main">
                     <section className="content" id="content">
-                        <div className="am-viewport">
+                        <div className="am-viewport" onClick={this.contentViewClick}>
                             <div className="active">
                                 <section className="am-scroll" id="scroll" style={{
                                     'backfaceVisibility': 'hidden',

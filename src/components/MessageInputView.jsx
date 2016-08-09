@@ -11,8 +11,12 @@ var MessageInputView = React.createClass({
     },
 
     getInitialState: function() {
-        return {showPluginView: false, showFaceView: false, showSendBtn: false};
+        return {showPluginView: false, showFaceView: false, showSendBtn: false, inputText: ''};
     },
+
+    // componentWillReceiveProps: function(nextProps) {
+    //     this.setState({shouldUp: nextProps.inputViewUp});
+    // },
 
     plusButtonClick: function() {
         var up = !this.state.showPluginView;
@@ -29,6 +33,14 @@ var MessageInputView = React.createClass({
         this.props.switchBtnClick();
     },
 
+    sendBtnClick: function() {
+        this.setState({
+            inputText: '',
+            showSendBtn: false
+        });
+        this.refs.ipt.focus();
+    },
+
     inputViewOnFocus: function() {
         console.log('inputViewOnFocus');
         this.setState({showPluginView: false, showFaceView: false});
@@ -37,7 +49,8 @@ var MessageInputView = React.createClass({
 
     inputChange: function(e) {
         this.setState({
-            showSendBtn: e.target.value.length != 0
+            showSendBtn: e.target.value.length != 0,
+            inputText: e.target.value
         });
     },
 
@@ -45,7 +58,7 @@ var MessageInputView = React.createClass({
 
 
         var classN = {};
-        if (this.state.showPluginView || this.state.showFaceView) {
+        if ((this.state.showPluginView || this.state.showFaceView)) {
             classN = {
                 'bottom': '280px'
             }
@@ -55,7 +68,7 @@ var MessageInputView = React.createClass({
         if (this.state.showSendBtn) {
             sendBtn = (
                 <div className="btn-wrap-right " id="subBtn ">
-                    <button>发送</button>
+                    <button onClick={this.sendBtnClick}>发送</button>
                 </div>
             );
         } else {
@@ -74,7 +87,7 @@ var MessageInputView = React.createClass({
                         <button className="icon-speak" onClick={this.switchBtnClick}></button>
                     </div>
                     <div className="ipt-wrap ">
-                        <textarea className="autoExpand" name="" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onChange={this.inputChange}></textarea>
+                        <textarea className="autoExpand" ref="ipt" name="" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onChange={this.inputChange} value={this.state.inputText}></textarea>
                     </div>
                     <div className="btn-wrap-mid" id="switchBtn">
                         <button className="icon-face" onClick={this.faceButtonClick}></button>
