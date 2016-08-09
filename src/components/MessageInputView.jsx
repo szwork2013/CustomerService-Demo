@@ -4,36 +4,34 @@ import ReactDOM from 'react-dom';
 var MessageInputView = React.createClass({
 
     propTypes: {
+        faceButtonClick: React.PropTypes.func.isRequired,
         inputOnFocus: React.PropTypes.func.isRequired,
         plusButtonClick: React.PropTypes.func.isRequired,
-        switchBtnClick: React.PropTypes.func.isRequired
+        switchBtnClick: React.PropTypes.func.isRequired,
     },
 
     getInitialState: function() {
-        return {inputViewUp: false, showSendBtn: false};
+        return {showPluginView: false, showFaceView: false, showSendBtn: false};
     },
 
     plusButtonClick: function() {
-        var up = !this.state.inputViewUp;
-        this.setState({inputViewUp: up});
-        console.log('MessageInputView-this.state.inputViewUp ' + this.state.inputViewUp);
+        var up = !this.state.showPluginView;
+        this.setState({showPluginView: up, showFaceView: false});
         this.props.plusButtonClick();
     },
     faceButtonClick: function() {
-        // var up = !this.state.inputViewUp;
-        // this.setState({inputViewUp: up});
-        // console.log('MessageInputView-this.state.inputViewUp ' + this.state.inputViewUp);
-        // this.props.plusButtonClick();
+        var up = !this.state.showFaceView;
+        this.setState({showPluginView: false, showFaceView: up});
+        this.props.faceButtonClick();
     },
     switchBtnClick: function() {
-        // var up = !this.state.inputViewUp;
-        this.setState({inputViewUp: false, inputViewUp: false});
+        this.setState({showPluginView: false, showFaceView: false});
         this.props.switchBtnClick();
     },
 
     inputViewOnFocus: function() {
         console.log('inputViewOnFocus');
-        this.setState({inputViewUp: false});
+        this.setState({showPluginView: false, showFaceView: false});
         this.props.inputOnFocus();
     },
 
@@ -47,7 +45,7 @@ var MessageInputView = React.createClass({
 
 
         var classN = {};
-        if (this.state.inputViewUp) {
+        if (this.state.showPluginView || this.state.showFaceView) {
             classN = {
                 'bottom': '280px'
             }
@@ -79,7 +77,7 @@ var MessageInputView = React.createClass({
                         <textarea className="autoExpand" name="" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onChange={this.inputChange}></textarea>
                     </div>
                     <div className="btn-wrap-mid" id="switchBtn">
-                        <button className="icon-face"></button>
+                        <button className="icon-face" onClick={this.faceButtonClick}></button>
                     </div>
                     {sendBtn}
                 </div>

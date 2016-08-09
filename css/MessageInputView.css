@@ -100,3 +100,13 @@ input {
     background-color: gray;
     height: 280px;
 }
+
+.face-board-view {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: #acaeb2;
+    height: 280px;
+}

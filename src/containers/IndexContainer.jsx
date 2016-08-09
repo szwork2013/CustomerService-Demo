@@ -2,32 +2,23 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
 import MessageInputView from '../components/MessageInputView';
-import PluginBoardView from '../components/PluginBoardView';
 import MessageSpeechView from '../components/MessageSpeechView';
+import PluginBoardView from '../components/PluginBoardView';
+import FaceBoardView from '../components/FaceBoardView';
 
 // import * as ActionType from '../constants/ActionType';
-
-let ChatContent = React.createClass({
-
-    render: function() {
-        return (
-            <div className="main"></div>
-        );
-    }
-});
 
 let CustomerServiceMainUI = React.createClass({
 
     getInitialState: function() {
-        return {inputViewUp: false, showSpeechView: false};
+        return {showPluginView: false, showFaceView: false, showSpeechView: false};
     },
 
     onFocus: function() {
         console.log('onFocus');
 
-        this.setState({inputViewUp: false});
-        console.log(' before window.scrollY :' + window.scrollY);
-        console.log(' before window.scrollX :' + window.scrollX);
+        this.setState({showPluginView: false, showFaceView: false});
+
         //https://segmentfault.com/q/1010000002914610
         var SCROLLY = 100;
         var TIMER_NAME = 200; // focus事件中200ms后进行判断
@@ -36,28 +27,27 @@ let CustomerServiceMainUI = React.createClass({
             if (window.scrollY < SCROLLY) {
                 window.scrollTo(0, MAX_SCROLL);
             }
-            console.log(' after window.scrollY :' + window.scrollY);
-            console.log(' after window.scrollX :' + window.scrollX);
 
         }, TIMER_NAME);
     },
 
     plusButtonClick: function() {
-        var up = !this.state.inputViewUp;
-        this.setState({inputViewUp: up});
-
-        console.log('CustomerServiceMainUI-this.state.inputViewUp ' + this.state.inputViewUp);
+        var up = !this.state.showPluginView;
+        this.setState({showPluginView: up, showFaceView: false});
     },
-
+    faceButtonClick: function() {
+        var up = !this.state.showFaceView;
+        this.setState({showPluginView: false, showFaceView: up});
+    },
     switchBtnClick: function() {
         console.log('switchBtnClick');
-        this.setState({showSpeechView: !this.state.showSpeechView, inputViewUp: false});
+        this.setState({showSpeechView: !this.state.showSpeechView, showPluginView: false, showFaceView: false});
     },
 
     pluginItemClick: function() {},
 
     componentDidUpdate: function(prevProps, prevState) {
-        if (this.state.inputViewUp) {
+        if (this.state.showPluginView || this.state.showFaceView ) {
             console.log('componentDidUpdate');
             var SCROLLY = 100;
             var TIMER_NAME = 500;
@@ -73,17 +63,25 @@ let CustomerServiceMainUI = React.createClass({
     render: function() {
 
         var pluginView = null;
-        if (this.state.inputViewUp) {
+        if (this.state.showPluginView) {
             pluginView = <PluginBoardView itemClick={this.pluginItemClick}/>;
         } else {
             pluginView = <div/>
         }
 
+        var faceView = null;
+        if (this.state.showFaceView) {
+            faceView = <FaceBoardView />;
+        } else {
+            faceView = <div/>
+        }
+
+
         var inputView = null;
         if (this.state.showSpeechView) {
             inputView = (<MessageSpeechView switchBtnClick={this.switchBtnClick}/>);
         } else {
-            inputView = (<MessageInputView inputOnFocus={this.onFocus} plusButtonClick={this.plusButtonClick} switchBtnClick={this.switchBtnClick}/>);
+            inputView = (<MessageInputView inputOnFocus={this.onFocus} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
 
         return (
@@ -106,6 +104,7 @@ let CustomerServiceMainUI = React.createClass({
                     {inputView}
                 </section>
                 {pluginView}
+                {faceView}
             </div>
         );
     }
