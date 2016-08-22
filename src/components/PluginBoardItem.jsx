@@ -5,9 +5,9 @@ var PluginBoardItem = React.createClass({
 
     render: function() {
         return (
-            <div className="plugin-board-item">
-                <img/>
-                <p></p>
+            <div className="">
+                <button className="" >{this.props.name}</button>
+                <p className="" >{this.props.title}</p>
             </div>
         );
     }

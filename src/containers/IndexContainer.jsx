@@ -6,6 +6,8 @@ import MessageSpeechView from '../components/MessageSpeechView';
 import PluginBoardView from '../components/PluginBoardView';
 import FaceBoardView from '../components/FaceBoardView';
 
+// import circle from '../../js/m.js'
+
 
 let CustomerServiceMainUI = React.createClass({
 
@@ -46,7 +48,16 @@ let CustomerServiceMainUI = React.createClass({
         // this.setState({showPluginView: false, showFaceView: false});
     },
 
-    pluginItemClick: function() {},
+    pluginItemClick: function(index) {
+        console.log('index' + index);
+        console.log('SiLinJSBridge' + window.SiLinJSBridge);
+        window.SiLinJSBridge.callImage();
+        window.SiLinJSBridge.chooseImageWithTypeCallback(1, {
+            chooseImageSuccess: function(url) {
+                console.log(url);
+            }
+        });
+    },
 
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.showPluginView || this.state.showFaceView ) {
