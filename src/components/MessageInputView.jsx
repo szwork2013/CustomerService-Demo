@@ -7,6 +7,7 @@ var MessageInputView = React.createClass({
         faceButtonClick: React.PropTypes.func.isRequired,
         inputOnFocus: React.PropTypes.func.isRequired,
         plusButtonClick: React.PropTypes.func.isRequired,
+        sendButtonClick: React.PropTypes.func.isRequired,
         switchBtnClick: React.PropTypes.func.isRequired,
     },
 
@@ -34,6 +35,9 @@ var MessageInputView = React.createClass({
     },
 
     sendBtnClick: function() {
+        console.log('sendButtonClick: ' + this.state.inputText);
+        this.props.sendButtonClick(this.state.inputText);
+
         this.setState({
             inputText: '',
             showSendBtn: false

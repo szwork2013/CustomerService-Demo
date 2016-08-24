@@ -6,13 +6,20 @@ import MessageSpeechView from '../components/MessageSpeechView';
 import PluginBoardView from '../components/PluginBoardView';
 import FaceBoardView from '../components/FaceBoardView';
 
-// import circle from '../../js/m.js'
+import * as ActionType from '../constants/ActionType';
+
+import { sendTextMessage } from '../actions/messageAction'
 
 
 let CustomerServiceMainUI = React.createClass({
 
     getInitialState: function() {
-        return {showPluginView: false, showFaceView: false, showSpeechView: false};
+        return {
+            inputText:'',
+            showPluginView: false,
+            showFaceView: false,
+            showSpeechView: false
+        };
     },
 
     onFocus: function() {
@@ -31,7 +38,14 @@ let CustomerServiceMainUI = React.createClass({
 
         }, TIMER_NAME);
     },
-
+    inputTextChange: function(e) {
+        this.setState({
+            inputText: e.target.value
+        });
+    },
+    sendButtonClick: function(text) {
+        this.props.sendTextMessage(text);
+    },
     plusButtonClick: function() {
         var up = !this.state.showPluginView;
         this.setState({showPluginView: up, showFaceView: false});
@@ -49,9 +63,7 @@ let CustomerServiceMainUI = React.createClass({
     },
 
     pluginItemClick: function(index) {
-        console.log('index' + index);
-        console.log('SiLinJSBridge' + window.SiLinJSBridge);
-        window.SiLinJSBridge.callImage();
+        console.log('pluginItemClick');
         window.SiLinJSBridge.chooseImageWithTypeCallback(1, {
             chooseImageSuccess: function(url) {
                 console.log(url);
@@ -93,22 +105,28 @@ let CustomerServiceMainUI = React.createClass({
         if (this.state.showSpeechView) {
             inputView = (<MessageSpeechView switchBtnClick={this.switchBtnClick}/>);
         } else {
-            inputView = (<MessageInputView inputOnFocus={this.onFocus} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
+            // inputTextChange={this.inputTextChange}
+            inputView = (<MessageInputView inputOnFocus={this.onFocus}  sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
 
+
+        var messagesView = this.props.messages.map(function(item, index) {
+            return (
+                <div className="text-message-session" key={index}>{item.messageID} :{item.text} </div>
+            );
+        });
+
+        console.log('messagesView: ' + messagesView);
         return (
             <div className="out-wrap">
                 <section className="main">
                     <section className="content" id="content">
                         <div className="am-viewport" onClick={this.contentViewClick}>
                             <div className="active">
-                                <section className="am-scroll" id="scroll" style={{
-                                    'backfaceVisibility': 'hidden',
-                                    'transformStyle': 'preserve-3d',
-                                    'height': '114px',
-                                    'transform': 'translate3d(0px, 0px, 0px)'
-                                }}>
-                                    <div id="chat-wrap" className="chat-wrap"></div>
+                                <section className="am-scroll" id="scroll" style={{'backfaceVisibility': 'hidden', 'transformStyle': 'preserve-3d', 'transform': 'translate3d(0px, 0px, 0px)', 'overflow': 'scroll'}}>
+                                    <div id="chat-wrap" className="chat-wrap">
+                                        {messagesView}
+                                    </div>
                                 </section>
                             </div>
                         </div>
@@ -122,8 +140,20 @@ let CustomerServiceMainUI = React.createClass({
     }
 });
 
+
 CustomerServiceMainUI.contextTypes = {
     history: PropTypes.object.isRequired
 }
 
-module.exports = connect()(CustomerServiceMainUI);
+
+
+function mapStateToProps(state) {
+	return {
+        messages: state.messageReducer.messages ,
+		count: state.messageReducer.count
+	};
+}
+
+module.exports = connect(mapStateToProps, {
+	sendTextMessage
+})(CustomerServiceMainUI);

@@ -4,12 +4,14 @@
         }: initFunc(g, true)
     }(this, function(glob, setGlobal) {
 
+        // 从原生注入 WeixinJSBridge 后，直接调用原生方法，没有的话直接debug输出
         function invokeCmd(cmd, param, callbackObj) {
             glob.WeixinJSBridge ? WeixinJSBridge.invoke(cmd, normParameter(param), function(res) {
                 completeBridgeInteraction(cmd, res, callbackObj);
             }) : debugBridgeInteraction(cmd, callbackObj)
         }
 
+        // 事件绑定
         function bindEvent(targetItem, callbackObj, debugCallback) {
             glob.WeixinJSBridge ? WeixinJSBridge.on(targetItem, function(res) {
                 if (debugCallback && debugCallback.trigger)
