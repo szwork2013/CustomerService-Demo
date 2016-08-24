@@ -26,6 +26,7 @@ export default function messageReducer(state = initialState, action) {
                 var id = state.count + 1;
                 var txtMessage = {
                     messageID: id,
+                    type: ActionType.TEXT_MESSAGE,
                     text: action.text,
                     status: ActionType.SENDING
                 };
@@ -47,7 +48,8 @@ export default function messageReducer(state = initialState, action) {
                 var id = state.count + 1;
                 var txtMessage = {
                     messageID: id,
-                    text: action.text,
+                    type: ActionType.IMAGE_MESSAGE,
+                    imageSrc: action.imageSrc,
                     status: ActionType.SENDING
                 };
                 obj.messages.push(txtMessage);

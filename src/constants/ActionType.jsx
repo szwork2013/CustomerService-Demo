@@ -4,6 +4,10 @@ export const SUCCESS = 'SUCCESS';
 export const ERROR = 'ERROR';
 export const SENDING = 'SENDING';
 
+// 消息类型
+export const TEXT_MESSAGE = 'TEXT_MESSAGE';
+export const IMAGE_MESSAGE = 'IMAGE_MESSAGE';
+
 // 文本消息发送
 export const SEND_TEXT_MESSAGE_SUCCESS = 'SEND_TEXT_MESSAGE_SUCCESS';
 export const SEND_TEXT_MESSAGE_ERROR = 'SEND_TEXT_MESSAGE_ERROR';

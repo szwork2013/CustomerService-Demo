@@ -8,3 +8,12 @@ exports.sendTextMessage = function (text) {
         text: text
     }
 };
+
+
+exports.sendImageMessage = function (src) {
+    // body...
+    return {
+        type: ActionType.SEND_IMAGE_MESSAGE,
+        imageSrc: src
+    }
+};

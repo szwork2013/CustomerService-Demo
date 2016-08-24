@@ -8,7 +8,7 @@ import FaceBoardView from '../components/FaceBoardView';
 
 import * as ActionType from '../constants/ActionType';
 
-import { sendTextMessage } from '../actions/messageAction'
+import { sendTextMessage, sendImageMessage} from '../actions/messageAction'
 
 
 let CustomerServiceMainUI = React.createClass({
@@ -64,9 +64,11 @@ let CustomerServiceMainUI = React.createClass({
 
     pluginItemClick: function(index) {
         console.log('pluginItemClick');
+        var self = this;
         window.SiLinJSBridge.chooseImageWithTypeCallback(1, {
             chooseImageSuccess: function(url) {
                 console.log(url);
+                self.props.sendImageMessage(url);
             }
         });
     },
@@ -109,11 +111,23 @@ let CustomerServiceMainUI = React.createClass({
             inputView = (<MessageInputView inputOnFocus={this.onFocus}  sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
 
-
         var messagesView = this.props.messages.map(function(item, index) {
-            return (
-                <div className="text-message-session" key={index}>{item.messageID} :{item.text} </div>
-            );
+            if (item.type === ActionType.TEXT_MESSAGE) {
+                return (
+                    <div className="text-message-session" key={index}>{item.messageID} :{item.text} </div>
+                );
+            }
+            if (item.type === ActionType.IMAGE_MESSAGE) {
+                return (
+                    <div className="text-message-session" key={index}>
+                        <p>{item.messageID}</p>
+                        <img src={item.imageSrc}></img>
+                    </div>
+                );
+            }
+
+            return null;
+
         });
 
         console.log('messagesView: ' + messagesView);
@@ -155,5 +169,6 @@ function mapStateToProps(state) {
 }
 
 module.exports = connect(mapStateToProps, {
-	sendTextMessage
+	sendTextMessage,
+    sendImageMessage
 })(CustomerServiceMainUI);
