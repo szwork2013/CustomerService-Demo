@@ -36,13 +36,16 @@ var MessageInputView = React.createClass({
 
     sendBtnClick: function() {
         console.log('sendButtonClick: ' + this.state.inputText);
-        this.props.sendButtonClick(this.state.inputText);
-
+        var text = this.state.inputText;
         this.setState({
             inputText: '',
             showSendBtn: false
         });
+
+        this.props.sendButtonClick(text);
+
         this.refs.ipt.focus();
+
     },
 
     inputViewOnFocus: function() {

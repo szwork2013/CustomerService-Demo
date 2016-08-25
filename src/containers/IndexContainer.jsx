@@ -65,7 +65,7 @@ let CustomerServiceMainUI = React.createClass({
     pluginItemClick: function(index) {
         console.log('pluginItemClick');
         var self = this;
-        window.SiLinJSBridge.chooseImageWithTypeCallback(1, {
+        window.SiLinJSBridge.chooseImageWithTypeCallback(index, {
             chooseImageSuccess: function(url) {
                 console.log(url);
                 self.props.sendImageMessage(url);
@@ -138,6 +138,9 @@ let CustomerServiceMainUI = React.createClass({
                         <div className="am-viewport" onClick={this.contentViewClick}>
                             <div className="active">
                                 <section className="am-scroll" id="scroll" style={{'backfaceVisibility': 'hidden', 'transformStyle': 'preserve-3d', 'transform': 'translate3d(0px, 0px, 0px)', 'overflow': 'scroll'}}>
+                                    <div className="history-msg J-history-msg visibility">
+                                        下拉加载历史记录
+                                    </div>
                                     <div id="chat-wrap" className="chat-wrap">
                                         {messagesView}
                                     </div>
