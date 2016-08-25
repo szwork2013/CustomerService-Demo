@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
+import iScroll from 'iscroll'
+import ReactIScroll from 'react-iscroll'
+
 import MessageInputView from '../components/MessageInputView';
 import MessageSpeechView from '../components/MessageSpeechView';
 import PluginBoardView from '../components/PluginBoardView';
@@ -9,6 +12,13 @@ import FaceBoardView from '../components/FaceBoardView';
 import * as ActionType from '../constants/ActionType';
 
 import { sendTextMessage, sendImageMessage} from '../actions/messageAction'
+
+
+const iScrollOptions = {
+    mouseWheel: true,
+    scrollbars: true,
+    scrollX: true
+}
 
 
 let CustomerServiceMainUI = React.createClass({
@@ -62,6 +72,22 @@ let CustomerServiceMainUI = React.createClass({
         // this.setState({showPluginView: false, showFaceView: false});
     },
 
+    onScrollStart: function() {
+        console.log('onScrollStart');
+    },
+
+    onScrollEnd: function(iScrollInstance) {
+        console.log('onScrollEnd');
+    },
+    onScrollRefresh: function(iScrollInstance) {
+        console.log('onScrollRefresh');
+        iScrollInstance.scrollTo(0,iScrollInstance.maxScrollY);
+        // this.refs.iScroll.withIScroll(function(iScroll) {
+        //     iScroll.scrollTop(0,9999);
+        // });
+    },
+
+
     pluginItemClick: function(index) {
         console.log('pluginItemClick');
         var self = this;
@@ -74,16 +100,23 @@ let CustomerServiceMainUI = React.createClass({
     },
 
     componentDidUpdate: function(prevProps, prevState) {
-        if (this.state.showPluginView || this.state.showFaceView ) {
-            console.log('componentDidUpdate');
-            var SCROLLY = 100;
-            var TIMER_NAME = 500;
-            var MAX_SCROLL = 99999; // 越大越好
-            setTimeout(function() {
-                if (window.scrollY < SCROLLY) {
-                    window.scrollTo(0, MAX_SCROLL);
-                }
-            }, TIMER_NAME);
+        // if (this.state.showPluginView || this.state.showFaceView ) {
+        //     console.log('componentDidUpdate');
+        //     var SCROLLY = 100;
+        //     var TIMER_NAME = 500;
+        //     var MAX_SCROLL = 99999; // 越大越好
+        //     setTimeout(function() {
+        //         if (window.scrollY < SCROLLY) {
+        //             window.scrollTo(0, MAX_SCROLL);
+        //         }
+        //     }, TIMER_NAME);
+        // }
+
+        if (this.state.showPluginView != prevState.showPluginView || this.state.showFaceView != prevState.showFaceView ) {
+            this.refs.iScroll.withIScroll(function(iScroll) {
+                iScroll.refresh();
+                console.log('iScroll.refresh');
+            });
         }
     },
 
@@ -103,26 +136,30 @@ let CustomerServiceMainUI = React.createClass({
             faceView = <div/>
         }
 
+        var contentStyle = {};
+        if (this.state.showPluginView || this.state.showFaceView ) {
+            contentStyle = {'bottom': '332'};
+        }
+
         var inputView = null;
         if (this.state.showSpeechView) {
             inputView = (<MessageSpeechView switchBtnClick={this.switchBtnClick}/>);
         } else {
-            // inputTextChange={this.inputTextChange}
             inputView = (<MessageInputView inputOnFocus={this.onFocus}  sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
 
         var messagesView = this.props.messages.map(function(item, index) {
             if (item.type === ActionType.TEXT_MESSAGE) {
                 return (
-                    <div className="text-message-session" key={index}>{item.messageID} :{item.text} </div>
+                    <li className="text-message-session" key={index}>{item.messageID} :{item.text} </li>
                 );
             }
             if (item.type === ActionType.IMAGE_MESSAGE) {
                 return (
-                    <div className="text-message-session" key={index}>
+                    <li className="text-message-session" key={index}>
                         <p>{item.messageID}</p>
                         <img src={item.imageSrc}></img>
-                    </div>
+                    </li>
                 );
             }
 
@@ -134,19 +171,19 @@ let CustomerServiceMainUI = React.createClass({
         return (
             <div className="out-wrap">
                 <section className="main">
-                    <section className="content" id="content">
-                        <div className="am-viewport" onClick={this.contentViewClick}>
-                            <div className="active">
-                                <section className="am-scroll" id="scroll" style={{'backfaceVisibility': 'hidden', 'transformStyle': 'preserve-3d', 'transform': 'translate3d(0px, 0px, 0px)', 'overflow': 'scroll'}}>
-                                    <div className="history-msg J-history-msg visibility">
-                                        下拉加载历史记录
-                                    </div>
-                                    <div id="chat-wrap" className="chat-wrap">
-                                        {messagesView}
-                                    </div>
-                                </section>
+                    <section className="content" id="content" style={contentStyle}>
+                        <ReactIScroll ref="iScroll" iScroll={iScroll} options={iScrollOptions} onRefresh={this.onScrollRefresh} onScrollStart={this.onScrollStart} onScrollEnd={this.onScrollEnd}>
+                            <div>
+                                <div className="history-msg J-history-msg visibility">
+                                    下拉加载历史记录
+                                </div>
+                                <ul id="chat-wrap" className="chat-wrap">
+                                    {messagesView}
+                                </ul>
                             </div>
-                        </div>
+
+                        </ReactIScroll>
+
                     </section>
                     {inputView}
                 </section>
