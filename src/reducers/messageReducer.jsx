@@ -46,19 +46,45 @@ export default function messageReducer(state = initialState, action) {
             {
                 var obj = _extends({}, state);
                 var id = state.count + 1;
-                var txtMessage = {
+                var message = {
                     messageID: id,
                     type: ActionType.IMAGE_MESSAGE,
                     imageSrc: action.imageSrc,
-                    status: ActionType.SENDING
+                    status: ActionType.SENDING,
+                    progress: 0
                 };
-                obj.messages.push(txtMessage);
+                obj.messages.push(message);
                 obj.count += 1;
                 return obj;
             }
         case ActionType.SEND_IMAGE_MESSAGE_PROGRESS:
             {
-                return state;
+                var objs = _extends({}, state);
+
+                var  index = -1;
+                var id = -1;
+                for (var i = 0; i < objs.messages.length; i++) {
+                    var obj = objs.messages[i];
+                    if (obj.imageSrc == action.imageSrc) {
+                        index = i;
+                        id = obj.messageID;
+                    }
+                }
+
+                if (index >= 0) {
+                    var message = {
+                        messageID: id,
+                        type: ActionType.IMAGE_MESSAGE,
+                        imageSrc: action.imageSrc,
+                        status: ActionType.SENDING,
+                        progress: action.progress
+                    };
+                    objs.messages.splice(index, 1, message);
+                    return objs;
+                } else {
+                    return state;
+                }
+
             }
         case ActionType.SEND_IMAGE_MESSAGE_SUCCESS:
             {

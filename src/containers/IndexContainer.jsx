@@ -11,7 +11,7 @@ import FaceBoardView from '../components/FaceBoardView';
 
 import * as ActionType from '../constants/ActionType';
 
-import { sendTextMessage, sendImageMessage} from '../actions/messageAction'
+import { sendTextMessage, sendImageMessage, uploadImageProgress, sendImageMessageSuccess} from '../actions/messageAction'
 
 
 const iScrollOptions = {
@@ -20,23 +20,35 @@ const iScrollOptions = {
     scrollX: true
 }
 
-
 let CustomerServiceMainUI = React.createClass({
 
     getInitialState: function() {
         return {
-            inputText:'',
             showPluginView: false,
             showFaceView: false,
-            showSpeechView: false
+            showSpeechView: false,
+            items: []
         };
     },
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.showPluginView != prevState.showPluginView || this.state.showFaceView != prevState.showFaceView ) {
+            this.refs.iScroll.withIScroll(function(iScroll) {
+                iScroll.refresh();
+                console.log('iScroll.refresh');
+            });
+        }
+    },
+    componentWillReceiveProps: function(nextProps) {
+        this.setState({
+            items: nextProps.messages
+        });
+    },
+
 
     onFocus: function() {
         console.log('onFocus');
-
         this.setState({showPluginView: false, showFaceView: false});
-
+        console.log(window.SiLinJSBridge.keyboardHeight());
         //https://segmentfault.com/q/1010000002914610
         var SCROLLY = 100;
         var TIMER_NAME = 200; // focus事件中200ms后进行判断
@@ -48,11 +60,7 @@ let CustomerServiceMainUI = React.createClass({
 
         }, TIMER_NAME);
     },
-    inputTextChange: function(e) {
-        this.setState({
-            inputText: e.target.value
-        });
-    },
+
     sendButtonClick: function(text) {
         this.props.sendTextMessage(text);
     },
@@ -82,43 +90,30 @@ let CustomerServiceMainUI = React.createClass({
     onScrollRefresh: function(iScrollInstance) {
         console.log('onScrollRefresh');
         iScrollInstance.scrollTo(0,iScrollInstance.maxScrollY);
-        // this.refs.iScroll.withIScroll(function(iScroll) {
-        //     iScroll.scrollTop(0,9999);
-        // });
     },
 
-
+    // 点击
     pluginItemClick: function(index) {
         console.log('pluginItemClick');
         var self = this;
         window.SiLinJSBridge.chooseImageWithTypeCallback(index, {
             chooseImageSuccess: function(url) {
-                console.log(url);
+                console.log('chooseImageSuccess ' + url);
                 self.props.sendImageMessage(url);
+            },
+            uploadImageProgress: function(url, progress) {
+                console.log('uploadImageProgress ' + url + ' ' + progress);
+
+                self.props.uploadImageProgress(url, progress);
+            },
+            uploadImageSuccess: function(url) {
+                console.log('uploadImageSuccess ' + url);
+                self.props.sendImageMessageSuccess(url);
             }
         });
     },
 
-    componentDidUpdate: function(prevProps, prevState) {
-        // if (this.state.showPluginView || this.state.showFaceView ) {
-        //     console.log('componentDidUpdate');
-        //     var SCROLLY = 100;
-        //     var TIMER_NAME = 500;
-        //     var MAX_SCROLL = 99999; // 越大越好
-        //     setTimeout(function() {
-        //         if (window.scrollY < SCROLLY) {
-        //             window.scrollTo(0, MAX_SCROLL);
-        //         }
-        //     }, TIMER_NAME);
-        // }
 
-        if (this.state.showPluginView != prevState.showPluginView || this.state.showFaceView != prevState.showFaceView ) {
-            this.refs.iScroll.withIScroll(function(iScroll) {
-                iScroll.refresh();
-                console.log('iScroll.refresh');
-            });
-        }
-    },
 
     render: function() {
 
@@ -147,18 +142,19 @@ let CustomerServiceMainUI = React.createClass({
         } else {
             inputView = (<MessageInputView inputOnFocus={this.onFocus}  sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
-
-        var messagesView = this.props.messages.map(function(item, index) {
+        // var messagesView = this.props.messages.map(function(item, index) {
+        var messagesView = this.state.items.map(function(item, index) {
             if (item.type === ActionType.TEXT_MESSAGE) {
                 return (
                     <li className="text-message-session" key={index}>{item.messageID} :{item.text} </li>
                 );
             }
             if (item.type === ActionType.IMAGE_MESSAGE) {
+                console.log(item.progress);
                 return (
                     <li className="text-message-session" key={index}>
-                        <p>{item.messageID}</p>
-                        <img src={item.imageSrc}></img>
+                        <p>{item.messageID}:{item.progress}</p>
+                        <img style={{'maxWidth': '100px', 'maxHeight': '100px'}} src={item.imageSrc}></img>
                     </li>
                 );
             }
@@ -210,5 +206,7 @@ function mapStateToProps(state) {
 
 module.exports = connect(mapStateToProps, {
 	sendTextMessage,
-    sendImageMessage
+    sendImageMessage,
+    uploadImageProgress,
+    sendImageMessageSuccess
 })(CustomerServiceMainUI);
