@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TextareaAutosize from 'react-textarea-autosize'
+import TextareaAutosize from 'react-textarea-autosize';
 
 
 var MessageInputView = React.createClass({
@@ -100,7 +100,7 @@ var MessageInputView = React.createClass({
                         <button className="icon-speak" onClick={this.switchBtnClick}></button>
                     </div>
                     <div className="ipt-wrap ">
-                        <textarea className="autoExpand" ref="ipt" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onBlur={this.inputViewOnBlur} onChange={this.inputChange} value={txt}></textarea>
+                        <TextareaAutosize ref="ipt" maxRows={5} placeholder="有问题就向我提问吧"  onFocus={this.inputViewOnFocus} onBlur={this.inputViewOnBlur} onChange={this.inputChange} value={txt} />
                     </div>
                     <div className="btn-wrap-mid" id="switchBtn">
                         <button className="icon-face" onClick={this.faceButtonClick}></button>
