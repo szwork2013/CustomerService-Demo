@@ -33,6 +33,6 @@ exports.sendImageMessageSuccess = function (src) {
     return {
         type: ActionType.SEND_IMAGE_MESSAGE_SUCCESS,
         imageSrc: src,
-        progress: 100
+        progress: 1
     }
 };

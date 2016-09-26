@@ -13,6 +13,7 @@ var _extends = Object.assign || function(target) {
 };
 
 const initialState = {
+    status: '',
     count: 0,
     messages: []
 };
@@ -84,11 +85,12 @@ export default function messageReducer(state = initialState, action) {
                 } else {
                     return state;
                 }
-
             }
         case ActionType.SEND_IMAGE_MESSAGE_SUCCESS:
             {
-                return state;
+                var objs = _extends({}, state);
+                objs.status = ActionType.SEND_IMAGE_MESSAGE_SUCCESS;
+                return objs;
             }
         case ActionType.SEND_IMAGE_MESSAGE_ERROR:
             {

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TextareaAutosize from 'react-textarea-autosize'
+
 
 var MessageInputView = React.createClass({
 
@@ -12,12 +14,13 @@ var MessageInputView = React.createClass({
     },
 
     getInitialState: function() {
-        return {showPluginView: false, showFaceView: false, showSendBtn: false, inputText: ''};
+        return {
+            showPluginView: false,
+            showFaceView: false,
+            showSendBtn: false,
+            inputText: ''
+        };
     },
-
-    // componentWillReceiveProps: function(nextProps) {
-    //     this.setState({shouldUp: nextProps.inputViewUp});
-    // },
 
     plusButtonClick: function() {
         var up = !this.state.showPluginView;
@@ -41,11 +44,8 @@ var MessageInputView = React.createClass({
             inputText: '',
             showSendBtn: false
         });
-
         this.props.sendButtonClick(text);
-
         this.refs.ipt.focus();
-
     },
 
     inputViewOnFocus: function() {
@@ -53,7 +53,10 @@ var MessageInputView = React.createClass({
         this.setState({showPluginView: false, showFaceView: false});
         this.props.inputOnFocus();
     },
-
+    inputViewOnBlur: function() {
+        console.log('inputViewOnBlur');
+        // this.setState({showPluginView: false, showFaceView: false});
+    },
     inputChange: function(e) {
         this.setState({
             showSendBtn: e.target.value.length != 0,
@@ -65,7 +68,7 @@ var MessageInputView = React.createClass({
 
 
         var classN = {};
-        if ((this.state.showPluginView || this.state.showFaceView)) {
+        if (this.state.showPluginView || this.state.showFaceView) {
             classN = {
                 'bottom': '280px'
             }
@@ -86,6 +89,9 @@ var MessageInputView = React.createClass({
             );
         }
 
+        var txt = this.state.inputText;
+        // if (this.state.inputText) {
+        // }
         return (
 
             <footer className="footer " id="iptBox " style={classN}>
@@ -94,7 +100,7 @@ var MessageInputView = React.createClass({
                         <button className="icon-speak" onClick={this.switchBtnClick}></button>
                     </div>
                     <div className="ipt-wrap ">
-                        <textarea className="autoExpand" ref="ipt" name="" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onChange={this.inputChange} value={this.state.inputText}></textarea>
+                        <textarea className="autoExpand" ref="ipt" id="ipt" rows="1" placeholder="有问题就向我提问吧" data-min-rows="1" focusflag="NO" onFocus={this.inputViewOnFocus} onBlur={this.inputViewOnBlur} onChange={this.inputChange} value={txt}></textarea>
                     </div>
                     <div className="btn-wrap-mid" id="switchBtn">
                         <button className="icon-face" onClick={this.faceButtonClick}></button>
