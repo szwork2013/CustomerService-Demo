@@ -66,7 +66,6 @@ var MessageInputView = React.createClass({
 
     render: function() {
 
-
         var classN = {};
         if (this.state.showPluginView || this.state.showFaceView) {
             classN = {

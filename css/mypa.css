@@ -501,8 +501,8 @@ body {
     visibility: hidden
 }
 .footer .ipt-wrap textarea {
-    resize: none;
-    overflow: hidden;
+    /*resize: none;
+    overflow: hidden;*/
     padding: 5px 2px 0;
     width: 100%;
     line-height: 24px;
