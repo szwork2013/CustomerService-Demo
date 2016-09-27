@@ -42,8 +42,10 @@ let CustomerServiceMainUI = React.createClass({
         return {
             showPluginView: false,
             showFaceView: false,
+            inputText:'',
+
             showSpeechView: false,
-            transText:'',
+
             items: [],
             show: false,
 
@@ -98,8 +100,15 @@ let CustomerServiceMainUI = React.createClass({
 
         }, TIMER_NAME);
     },
-
+    inputTextChange: function (text) {
+        this.setState({
+            inputText: text
+        });
+    },
     sendButtonClick: function(text) {
+        this.setState({
+            inputText: ''
+        });
         this.props.sendTextMessage(text);
     },
     plusButtonClick: function() {
@@ -163,12 +172,18 @@ let CustomerServiceMainUI = React.createClass({
             }
         });
     },
-    // -(void)startRecording:(JSValue *)callback;
-    // -(void)cancelRecording:(JSValue *)callback;
-    // -(void)endRecording:(JSValue *)callback;
-    // -(void)resultRecording:(JSValue *)callback;
+
+    getRandomArbitrary: function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+
     // 录音相关
-    startRecording: function() {
+    startRecording: function(err) {
+
+        if (err) {
+            return;
+        }
+
         this.setState({
             isRecording: true,
             shouldCancel: false
@@ -180,11 +195,32 @@ let CustomerServiceMainUI = React.createClass({
         var self = this;
         window.SiLinJSBridge.onVoiceRecordEnd(function (result){
             console.log('window.SiLinJSBridge.onVoiceRecordEnd: ' + result);
+            var num = self.getRandomArbitrary(0, 10);
+            console.log(num);
+            // if (num % 2 == 0) {
+            //     result = 'hello world';
+            // } else {
+            //     result = '';
+            // }
+
             if (result.length == 0) {
                 self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+
             } else {
-                self.props.sendTextMessage(result);
+                // self.props.sendTextMessage(result);
+                //
+                // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
+
+                // self.setState({
+                //     showSpeechView: false,
+                //     showPluginView: false,
+                //     showFaceView: false,
+                //     inputText:result
+                // });
+                self.test(result);
             }
+
+
         });
     },
     endRecording: function() {
@@ -196,15 +232,35 @@ let CustomerServiceMainUI = React.createClass({
         var self = this;
         window.SiLinJSBridge.endRecording(function(result){
             console.log('window.SiLinJSBridge.endRecording: ' + result);
+
+            var num = self.getRandomArbitrary(0, 10);
+            console.log(num);
+            if (num % 2 == 0) {
+                result = 'hello world';
+            } else {
+                result = '';
+            }
+
             if (!result || result == 'null' || result.length == 0) {
                 self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+
+                // result = '你不说话，我怎么知道你想要知道什么(请重新发送语音消息)';
+
             } else {
                 // self.props.sendTextMessage(result);
-
-                self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, transText:result});
+                // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
+                self.test(result);
             }
+
+            // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
         });
     },
+
+    test: function(result){
+        this.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
+        // this.refs.ipt.focus();
+    },
+
     cancelRecording: function() {
         this.setState({
             isRecording: false,
@@ -241,16 +297,21 @@ let CustomerServiceMainUI = React.createClass({
         }
 
         var contentStyle = {};
+        var shouldUp = false;
         if (this.state.showPluginView || this.state.showFaceView ) {
             contentStyle = {'bottom': '332'};
+
+            shouldUp = true;
         }
 
         var inputView = null;
+        var showSendBtn = (this.state.inputText.length != 0);
+
         if (this.state.showSpeechView) {
             // 开始录音 取消录音 录音完成 提醒内容切换
             inputView = (<MessageSpeechView switchBtnClick={this.switchBtnClick} startRecording={this.startRecording} endRecording={this.endRecording} cancelRecording={this.cancelRecording} tipChange={this.tipChange}/>);
         } else {
-            inputView = (<MessageInputView inputOnFocus={this.onFocus} sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
+            inputView = (<MessageInputView shouldUp={shouldUp} showSendBtn={showSendBtn} inputText={this.state.inputText} inputTextChange={this.inputTextChange} inputOnFocus={this.onFocus} sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
         // var messagesView = this.props.messages.map(function(item, index) {
         var messagesView = this.state.items.map(function(item, index) {
@@ -330,8 +391,6 @@ let CustomerServiceMainUI = React.createClass({
 CustomerServiceMainUI.contextTypes = {
     history: PropTypes.object.isRequired
 }
-
-
 
 function mapStateToProps(state) {
 	return {

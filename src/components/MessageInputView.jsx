@@ -5,13 +5,13 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 var MessageInputView = React.createClass({
 
-    propTypes: {
-        faceButtonClick: React.PropTypes.func.isRequired,
-        inputOnFocus: React.PropTypes.func.isRequired,
-        plusButtonClick: React.PropTypes.func.isRequired,
-        sendButtonClick: React.PropTypes.func.isRequired,
-        switchBtnClick: React.PropTypes.func.isRequired,
-    },
+    // propTypes: {
+    //     faceButtonClick: React.PropTypes.func ,
+    //     inputOnFocus: React.PropTypes.func ,
+    //     plusButtonClick: React.PropTypes.func ,
+    //     sendButtonClick: React.PropTypes.func ,
+    //     switchBtnClick: React.PropTypes.func ,
+    // },
 
     getInitialState: function() {
         return {
@@ -21,6 +21,31 @@ var MessageInputView = React.createClass({
             inputText: ''
         };
     },
+
+    componentWillReceiveProps: function(nextProps) {
+
+        console.log('componentWillReceiveProps');
+
+        if (nextProps.inputText.length > 0) {
+            this.setState({
+                showSendBtn: true
+            });
+            console.log('this.refs.ipt.focus');
+            this.refs.ipt.focus();
+        }
+    },
+
+    // componentDidUpdate: function() {
+    //
+    //     if (this.props.inputText.length > 0) {
+    //         this.setState({
+    //             showSendBtn: true
+    //         });
+    //         console.log('this.refs.ipt.focus');
+    //         this.refs.ipt.focus();
+    //     }
+    //
+    // },
 
     plusButtonClick: function() {
         var up = !this.state.showPluginView;
@@ -44,7 +69,7 @@ var MessageInputView = React.createClass({
             inputText: '',
             showSendBtn: false
         });
-        this.props.sendButtonClick(text);
+        this.props.sendButtonClick(this.props.inputText);
         this.refs.ipt.focus();
     },
 
@@ -55,26 +80,32 @@ var MessageInputView = React.createClass({
     },
     inputViewOnBlur: function() {
         console.log('inputViewOnBlur');
-        // this.setState({showPluginView: false, showFaceView: false});
     },
     inputChange: function(e) {
         this.setState({
             showSendBtn: e.target.value.length != 0,
             inputText: e.target.value
         });
+
+        this.props.inputTextChange(e.target.value);
     },
 
     render: function() {
 
         var classN = {};
-        if (this.state.showPluginView || this.state.showFaceView) {
+        // if (this.state.showPluginView || this.state.showFaceView) {
+        //     classN = {
+        //         'bottom': '280px'
+        //     }
+        // }
+        if (this.props.shouldUp) {
             classN = {
                 'bottom': '280px'
             }
         }
 
         var sendBtn = null;
-        if (this.state.showSendBtn) {
+        if (this.state.showSendBtn || this.props.showSendBtn) {
             sendBtn = (
                 <div className="btn-wrap-right " id="subBtn ">
                     <button onClick={this.sendBtnClick}>发送</button>
@@ -99,7 +130,7 @@ var MessageInputView = React.createClass({
                         <button className="icon-speak" onClick={this.switchBtnClick}></button>
                     </div>
                     <div className="ipt-wrap ">
-                        <TextareaAutosize ref="ipt" maxRows={5} placeholder="有问题就向我提问吧"  onFocus={this.inputViewOnFocus} onBlur={this.inputViewOnBlur} onChange={this.inputChange} value={txt} />
+                        <TextareaAutosize ref="ipt" maxRows={5} placeholder="有问题就向我提问吧" onFocus={this.inputViewOnFocus} onBlur={this.inputViewOnBlur} onChange={this.inputChange} value={this.props.inputText} />
                     </div>
                     <div className="btn-wrap-mid" id="switchBtn">
                         <button className="icon-face" onClick={this.faceButtonClick}></button>
