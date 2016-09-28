@@ -71,6 +71,12 @@ var config = {
         }, {
             test: /\.css$/,
             loader: "style-loader!css-loader"
+        },{
+            test: /\.(jpe?g|png|gif|svg)$/i,
+            loaders: [
+                'url?limit=10000&hash=sha512&digest=hex&name=img/[hash].[ext]',
+                'image-webpack?{progress:true, optimizationLevel: 7, interlaced: false, pngquant: {quality: "65-90", speed: 4}}'
+            ]
         }]
     },
     eslint: {

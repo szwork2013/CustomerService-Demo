@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>[smile]</key>
+		<string>😄</string>
+
+		<key>[smiley]</key>
+		<string>😃</string>
+
+		<key>[laughing]</key>
+		<string>😆</string>
+
+		<key>[blush]</key>
+		<string>😊</string>
+
+		<key>[heart_eyes]</key>
+		<string>😍</string>
+
+		<key>[smirk]</key>
+		<string>😏</string>
+
+		<key>[flushed]</key>
+		<string>😳</string>
+
+		<key>[kissing_heart]</key>
+		<string>😘</string>
+
+		<key>[grin]</key>
+		<string>😁</string>
+
+		<key>[wink]</key>
+		<string>😉</string>
+
+		<key>[stuck_out_tongue_winking_eye]</key>
+		<string>😜</string>
+
+		<key>[stuck_out_tongue]</key>
+		<string>😛</string>
+
+		<key>[sleeping]</key>
+		<string>😴</string>
+
+		<key>[worried]</key>
+		<string>😟</string>
+
+		<key>[expressionless]</key>
+		<string>😑</string>
+
+		<key>[sweat_smile]</key>
+		<string>😅</string>
+
+		<key>[cold_sweat]</key>
+		<string>😰</string>
+
+		<key>[joy]</key>
+		<string>😂</string>
+
+		<key>[sob]</key>
+		<string>😭</string>
+
+		<key>[angry]</key>
+		<string>😠</string>
+
+		<key>[mask]</key>
+		<string>😷</string>
+
+		<key>[scream]</key>
+		<string>😱</string>
+
+		<key>[sunglasses]</key>
+		<string>😎</string>
+
+		<key>[heart]</key>
+		<string>❤️</string>
+
+		<key>[broken_heart]</key>
+		<string>💔</string>
+
+		<key>[star]</key>
+		<string>⭐️</string>
+
+		<key>[anger]</key>
+		<string>💢</string>
+
+		<key>[exclamation]</key>
+		<string>❗️</string>
+
+		<key>[question]</key>
+		<string>❓</string>
+
+		<key>[zzz]</key>
+		<string>💤</string>
+
+		<key>[thumbsup]</key>
+		<string>👍</string>
+
+		<key>[thumbsdown]</key>
+		<string>👎</string>
+
+		<key>[ok_hand]</key>
+		<string>👌</string>
+
+		<key>[punch]</key>
+		<string>👊</string>
+
+		<key>[v]</key>
+		<string>✌</string>
+
+		<key>[clap]</key>
+		<string>👏</string>
+
+		<key>[muscle]</key>
+		<string>💪</string>
+
+		<key>[pray]</key>
+		<string>🙏</string>
+
+		<key>[skull]</key>
+		<string>💀</string>
+
+		<key>[trollface]</key>
+		<string>👻</string>
+	</dict>
+</plist>

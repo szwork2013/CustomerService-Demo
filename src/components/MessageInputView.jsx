@@ -26,13 +26,13 @@ var MessageInputView = React.createClass({
 
         console.log('componentWillReceiveProps');
 
-        if (nextProps.inputText.length > 0) {
-            this.setState({
-                showSendBtn: true
-            });
-            console.log('this.refs.ipt.focus');
-            this.refs.ipt.focus();
-        }
+        // if (nextProps.inputText.length > 0) {
+        //     this.setState({
+        //         showSendBtn: true
+        //     });
+        //     console.log('this.refs.ipt.focus');
+        //     this.refs.ipt.focus();
+        // }
     },
 
     // componentDidUpdate: function() {
@@ -100,7 +100,7 @@ var MessageInputView = React.createClass({
         // }
         if (this.props.shouldUp) {
             classN = {
-                'bottom': '280px'
+                'bottom': '170px'
             }
         }
 

@@ -17,6 +17,27 @@ import * as ActionType from '../constants/ActionType';
 
 import { sendTextMessage, sendImageMessage, uploadImageProgress, sendImageMessageSuccess} from '../actions/messageAction'
 
+import Slide from '../components/Slide'
+
+// import banner1 from '../../img/banner1.png'
+// import banner2 from '../../img/banner2.png'
+// import banner3 from '../../img/banner3.png'
+
+const opts = [{
+	link: 'javascript:;',
+	src: '../../img/banner1.png'
+},{
+	src: '../../img/banner2.png'
+},{
+	link: '#',
+	src: '../../img/banner3.png'
+},{
+	link: '#',
+	src: '../../img/banner3.png'
+}]
+
+
+
 
 const iScrollOptions = {
     mouseWheel: true,
@@ -277,6 +298,20 @@ let CustomerServiceMainUI = React.createClass({
         });
     },
 
+    emojiClick: function(emoji) {
+        // var txt = this.state.inputText + ' ' + emoji + ' ';
+        var txt = this.state.inputText + emoji;
+        this.setState({
+            inputText: txt
+        })
+    },
+    deleteEmojiAction: function() {
+        var txt = this.state.inputText;
+        this.setState({
+            inputText: txt.substring(0,txt.length-1)
+        })
+    },
+
     render: function() {
         console.log('render');
 
@@ -291,7 +326,16 @@ let CustomerServiceMainUI = React.createClass({
 
         var faceView = null;
         if (this.state.showFaceView) {
-            faceView = <FaceBoardView />;
+            // faceView = <FaceBoardView emojiClick={this.emojiClick} />;
+
+            var emojiArr = [];
+            for (var i = 0; i < 4; i++) {
+                var start = i * 20;
+                var end = start + 20;
+                emojiArr.push(emojis.slice(start, end));
+            }
+            console.log(emojiArr);
+            faceView = <Slide emojiClick={this.emojiClick} deleteEmojiAction={this.deleteEmojiAction} emojis={emojiArr} />
         } else {
             faceView = <div/>
         }
@@ -299,7 +343,7 @@ let CustomerServiceMainUI = React.createClass({
         var contentStyle = {};
         var shouldUp = false;
         if (this.state.showPluginView || this.state.showFaceView ) {
-            contentStyle = {'bottom': '332'};
+            contentStyle = {'bottom': '222'};
 
             shouldUp = true;
         }
@@ -406,3 +450,85 @@ module.exports = connect(mapStateToProps, {
     uploadImageProgress,
     sendImageMessageSuccess
 })(CustomerServiceMainUI);
+
+const emojis =
+   ["😃",
+    "😍",
+    "😒",
+    "😳",
+    "😁",
+    "😘",
+    "😉",
+    "😠",
+    "😞",
+    "😞",
+    "😭",
+    "😝",
+    "😡",
+    "😣",
+    "😔",
+    "😄",
+    "😷",
+    "😚",
+    "😓",
+    "😂",
+    "😊",
+    "😢",
+    "😜",
+    "😨",
+    "😰",
+    "😲",
+    "😏",
+    "😱",
+    "😪",
+    "😖",
+    "😌",
+    "👿",
+    "👻",
+    "🎅",
+    "👧",
+    "👦",
+    "👩",
+    "👨",
+    "🐶",
+    "🐱",
+    "👍",
+    "👎",
+    "👊",
+    "✊",
+    "✌",
+    "💪",
+    "💪",
+    "👈",
+    "👆",
+    "👉",
+    "👇",
+    "👌",
+    "❤",
+    "💔",
+    "🙏",
+    "☀",
+    "🌙",
+    "🌟",
+    "⚡",
+    "☁",
+    "☔",
+    "🍁",
+    "🌻",
+    "🍃",
+    "👗",
+    "🎀",
+    "👄",
+    "🌹",
+    "☕",
+    "🎂",
+    "🕙",
+    "🍺",
+    "🔍",
+    "📱",
+    "🏠",
+    "🚗",
+    "🎁",
+    "⚽",
+    "💣",
+    "💎"];
