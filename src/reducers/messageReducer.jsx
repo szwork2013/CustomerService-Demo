@@ -25,9 +25,11 @@ export default function messageReducer(state = initialState, action) {
             {
                 var obj = _extends({}, state);
                 var id = state.count + 1;
+                var timeStamp = new Date().getTime();
                 var txtMessage = {
                     messageID: id,
                     type: ActionType.TEXT_MESSAGE,
+                    timeStamp: timeStamp,
                     text: action.text,
                     status: ActionType.SENDING
                 };
@@ -47,9 +49,11 @@ export default function messageReducer(state = initialState, action) {
             {
                 var obj = _extends({}, state);
                 var id = state.count + 1;
+                var timeStamp = new Date().getTime();
                 var message = {
                     messageID: id,
                     type: ActionType.IMAGE_MESSAGE,
+                    timeStamp: timeStamp,
                     imageSrc: action.imageSrc,
                     status: ActionType.SENDING,
                     progress: 0
@@ -69,6 +73,7 @@ export default function messageReducer(state = initialState, action) {
                     if (obj.imageSrc == action.imageSrc) {
                         index = i;
                         id = obj.messageID;
+                        timeStamp = obj.timeStamp;
                     }
                 }
 
@@ -76,6 +81,7 @@ export default function messageReducer(state = initialState, action) {
                     var message = {
                         messageID: id,
                         type: ActionType.IMAGE_MESSAGE,
+                        timeStamp: timeStamp,
                         imageSrc: action.imageSrc,
                         status: ActionType.SENDING,
                         progress: action.progress

@@ -42,36 +42,31 @@ var config = {
             inject: false,
             template: path.join(__dirname, './index.html')
         }),
-        //Allows for sync with browser while developing (like BorwserSync)
         new webpack.HotModuleReplacementPlugin(),
-        //Allows error warninggs but does not stop compiling. Will remove when eslint is added
         new webpack.NoErrorsPlugin()
-
-
     ],
     module: {
         //eslint loader
-        preLoaders: [{
-            test: /\.(js|jsx)$/,
-            loader: 'eslint-loader',
-            include: [path.resolve(__dirname, "src")],
-            exclude: [path.resolve(__dirname, "src/svg-icons"), path.resolve(__dirname, "src/utils/modernizr.custom.js")]
-        }],
+        // preLoaders: [{
+        //     test: /\.(js|jsx)$/,
+        //     loader: 'eslint-loader',
+        //     include: [path.resolve(__dirname, "src")],
+        //     exclude: [path.resolve(__dirname, "src/svg-icons"), path.resolve(__dirname, "src/utils/modernizr.custom.js")]
+        // }],
         //Allow loading of non-es5 js files.
         loaders: [{
             test: /\.js?$/,
             exclude: /(node_modules|bower_components)/,
-            loader: 'babel', // 'babel-loader' is also a legal name to reference
+            loader: 'babel',
             query: {
                 presets: ['react', 'es2015'],
                 plugins: ["transform-object-assign"]
             }
         }, {
-            test: /\.jsx$/, //All .js and .jsx files
-            //loaders: ['react-hot','babel-loader?optional=runtime&stage=0'], //react-hot is like browser sync and babel loads jsx and es6-7
+            test: /\.jsx$/,
             loaders: ['react-hot', 'babel?presets[]=react,presets[]=es2015'],
-            include: [__dirname, path.resolve(__dirname, 'src/app')], //include these files
-            exclude: [nodeModulesPath] //exclude node_modules so that they are not all compiled
+            include: [__dirname, path.resolve(__dirname, 'src/app')],
+            exclude: [nodeModulesPath]
         }, {
             test: /\.txt$/,
             loader: 'raw-loader',
@@ -81,19 +76,18 @@ var config = {
             loader: 'raw-loader',
             include: path.resolve(__dirname, 'src/app/components')
         }, {
-            test: /\.js$/, //All .js and .jsx files
-            // loader:'babel-loader?optional=runtime&stage=0', //react-hot is like browser sync and babel loads jsx and es6-7
+            test: /\.js$/,
             loader: 'babel-loader',
-            include: [__dirname, path.resolve(__dirname, '../src')], //include these files
-            exclude: [nodeModulesPath] //exclude node_modules so that they are not all compiled
+            include: [__dirname, path.resolve(__dirname, '../src')],
+            exclude: [nodeModulesPath]
         }, {
             test: /\.css$/,
             loader: "style-loader!css-loader"
         }, ]
     },
-    eslint: {
-        configFile: '.eslintrc'
-    }
+    // eslint: {
+    //     configFile: '.eslintrc'
+    // }
 };
 
 module.exports = config;

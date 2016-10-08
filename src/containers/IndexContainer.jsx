@@ -161,9 +161,9 @@ let CustomerServiceMainUI = React.createClass({
             document.activeElement.blur();
         }
 
-        // if (this.state.showPluginView || this.state.showFaceView) {
-        //     this.setState({showPluginView: false, showFaceView: false});
-        // }
+        if (this.state.showPluginView || this.state.showFaceView) {
+            this.setState({showPluginView: false, showFaceView: false});
+        }
     },
 
     onScrollEnd: function(iScrollInstance) {
@@ -216,8 +216,8 @@ let CustomerServiceMainUI = React.createClass({
         var self = this;
         window.SiLinJSBridge.onVoiceRecordEnd(function (result){
             console.log('window.SiLinJSBridge.onVoiceRecordEnd: ' + result);
-            var num = self.getRandomArbitrary(0, 10);
-            console.log(num);
+            // var num = self.getRandomArbitrary(0, 10);
+            // console.log(num);
             // if (num % 2 == 0) {
             //     result = 'hello world';
             // } else {
@@ -254,13 +254,13 @@ let CustomerServiceMainUI = React.createClass({
         window.SiLinJSBridge.endRecording(function(result){
             console.log('window.SiLinJSBridge.endRecording: ' + result);
 
-            var num = self.getRandomArbitrary(0, 10);
-            console.log(num);
-            if (num % 2 == 0) {
-                result = 'hello world';
-            } else {
-                result = '';
-            }
+            // var num = self.getRandomArbitrary(0, 10);
+            // console.log(num);
+            // if (num % 2 == 0) {
+            //     result = 'hello world';
+            // } else {
+            //     result = '';
+            // }
 
             if (!result || result == 'null' || result.length == 0) {
                 self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
@@ -301,6 +301,7 @@ let CustomerServiceMainUI = React.createClass({
     emojiClick: function(emoji) {
         // var txt = this.state.inputText + ' ' + emoji + ' ';
         var txt = this.state.inputText + emoji;
+        console.log(txt + 'length = ' + txt.length);
         this.setState({
             inputText: txt
         })
@@ -344,7 +345,6 @@ let CustomerServiceMainUI = React.createClass({
         var shouldUp = false;
         if (this.state.showPluginView || this.state.showFaceView ) {
             contentStyle = {'bottom': '222'};
-
             shouldUp = true;
         }
 
@@ -358,40 +358,127 @@ let CustomerServiceMainUI = React.createClass({
             inputView = (<MessageInputView shouldUp={shouldUp} showSendBtn={showSendBtn} inputText={this.state.inputText} inputTextChange={this.inputTextChange} inputOnFocus={this.onFocus} sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
         // var messagesView = this.props.messages.map(function(item, index) {
+        // <li className="text-message-session" key={index}>{item.messageID} :{item.text} </li>
         var messagesView = this.state.items.map(function(item, index) {
+			var hour = (new Date(item.timeStamp)).getHours();
+			if (String(hour).length === 1) {
+				hour = '0' + hour;
+			}
+			var minit = (new Date(item.timeStamp)).getMinutes()
+			if (String(minit).length === 1) {
+				minit = '0' + minit;
+			}
+			var time = hour + ':' + minit;
+			var timeCell = null;
+			if (true) {
+				timeCell = (
+					<section  className="message-wrap system-info-wrap J-system-message-wrap ">
+						<section className="message-info-inner ">{time}</section>
+					</section>
+				);
+			}
             if (item.type === ActionType.TEXT_MESSAGE) {
-                return (
-                    <li className="text-message-session" key={index}>{item.messageID} :{item.text} </li>
-                );
+                if (index % 2 == 0) {
+                    return (
+						<div key={index}>
+							{timeCell}
+	                        <section  className="J-wrap-answer-section message-wrap robot" data-libversion="undefined" data-message-type="robot" message-wrap="">
+	                            <div className="service-avatar ">
+	                                <img src="../../img/zVBCcOVAtHFuRJJ.png "/>
+	                            </div>
+	                            <div className="message ">
+	                                <div className="bubble-arrow "></div>
+	                                <article className="answer-wrap J-answer-wrap ">
+	                                    <div className="J-answerContent-wrap answer-inner-wrap ">
+	                                        <div>{item.text}</div>
+	                                    </div>
+	                                </article>
+	                            </div>
+	                        </section>
+						</div>
+                    );
+                } else {
+
+                    return (
+						<div key={index}>
+							{timeCell}
+	                        <section className="message-wrap visitor " data-message-type="visitor">
+	                            <div className="message " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
+	                                <div className="bubble-arrow " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
+	                                </div>
+	                                <article className="ask-wrap ">{item.text}</article>
+	                            </div>
+	                            <div className="visitor-avatar ">
+	                                <img src="../../img/pEMnDuflOnsZLkH.jpg"/>
+	                            </div>
+	                        </section>
+						</div>
+                    );
+
+                }
+
             }
             if (item.type === ActionType.IMAGE_MESSAGE) {
                 // console.log(item.progress);
                 var divStyle = {
-                    backgroundImage: 'url(' + item.imageSrc + ')'
+                    // backgroundImage: 'url(' + item.imageSrc + ')',
+                    maxWidth:'150px',
+                    maxHeight: '150px'
                 };
 
-                if (item.progress == 1) {
-                    return (
-                        <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
-                            <p>{item.messageID}:{item.progress}</p>
-                            <div className="weui_uploader_file" style={divStyle}>
-                            </div>
-                        </li>
-                    );
-                } else {
+                return (
+					<div  key={index}>
+						{timeCell}
+	                    <section className="message-wrap visitor " data-message-type="visitor">
+	                        <div className="message " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
+	                            <div className="bubble-arrow " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
+	                            </div>
+	                            <article className="ask-wrap ">
+	                                <img src={item.imageSrc} style={divStyle}></img>
+	                            </article>
+	                        </div>
+	                        <div className="visitor-avatar ">
+	                            <img src="../../img/pEMnDuflOnsZLkH.jpg"/>
+	                        </div>
+	                    </section>
+					</div>
+                    // <li  className="J-wrap-answer-section message-wrap robot" data-libversion="undefined" data-message-type="robot" message-wrap="" key={index}>
+                    //     <div className="service-avatar ">
+                    //         <img src="../../img/zVBCcOVAtHFuRJJ.png "/>
+                    //     </div>
+                    //     <div className="message ">
+                    //         <div className="bubble-arrow "></div>
+                    //         <article className="answer-wrap J-answer-wrap ">
+                    //             <div className="J-answerContent-wrap answer-inner-wrap ">
+                    //                 <div></div>
+                    //                 <img src={item.imageSrc} style={divStyle}></img>
+                    //             </div>
+                    //         </article>
+                    //     </div>
+                    // </li>
+                );
 
-                    var num  = item.progress;
-                    num = num.toFixed(2);
-
-                    return (
-                        <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
-                            <p>{item.messageID}:{item.progress}</p>
-                            <div className="weui_uploader_file weui_uploader_status" style={divStyle}>
-                                <div className="weui_uploader_status_content">{num * 100}%</div>
-                            </div>
-                        </li>
-                    );
-                }
+                // if (item.progress == 1) {
+                //     return (
+                //         <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
+                //             <p>{item.messageID}:{item.progress}</p>
+                //             <div className="weui_uploader_file" style={divStyle}>
+                //             </div>
+                //         </li>
+                //     );
+                // } else {
+                //     var num  = item.progress;
+                //     num = num.toFixed(2);
+                //
+                //     return (
+                //         <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
+                //             <p>{item.messageID}:{item.progress}</p>
+                //             <div className="weui_uploader_file weui_uploader_status" style={divStyle}>
+                //                 <div className="weui_uploader_status_content">{num * 100}%</div>
+                //             </div>
+                //         </li>
+                //     );
+                // }
             }
             return null;
         });
@@ -412,12 +499,10 @@ let CustomerServiceMainUI = React.createClass({
                     <section className="content" id="content" style={contentStyle}>
                         <ReactIScroll ref="iScroll" iScroll={iScroll} options={iScrollOptions} onRefresh={this.onScrollRefresh} onScrollStart={this.onScrollStart} onScrollEnd={this.onScrollEnd}>
                             <div>
-                                <div className="history-msg J-history-msg visibility">
-                                    下拉加载历史记录
-                                </div>
-                                <ul id="chat-wrap" className="chat-wrap">
+                                <div className="history-msg J-history-msg visibility">下拉加载历史纪录</div>
+                                <div id="chat-wrap" className="chat-wrap">
                                     {messagesView}
-                                </ul>
+                                </div>
                             </div>
                         </ReactIScroll>
                         {loading}
