@@ -19,24 +19,7 @@ import { sendTextMessage, sendImageMessage, uploadImageProgress, sendImageMessag
 
 import Slide from '../components/Slide'
 
-// import banner1 from '../../img/banner1.png'
-// import banner2 from '../../img/banner2.png'
-// import banner3 from '../../img/banner3.png'
-
-const opts = [{
-	link: 'javascript:;',
-	src: '../../img/banner1.png'
-},{
-	src: '../../img/banner2.png'
-},{
-	link: '#',
-	src: '../../img/banner3.png'
-},{
-	link: '#',
-	src: '../../img/banner3.png'
-}]
-
-
+import WebPullToRefresh from '../../js/wptr.1.1';
 
 
 const iScrollOptions = {
@@ -60,6 +43,7 @@ let ImageMessageCell = React.createClass({
 let CustomerServiceMainUI = React.createClass({
 
     getInitialState: function() {
+
         return {
             showPluginView: false,
             showFaceView: false,
@@ -71,15 +55,27 @@ let CustomerServiceMainUI = React.createClass({
             show: false,
 
             isRecording: false,
-            shouldCancel: false
+            shouldCancel: false,
+
+			initialized: false,
+			disabled: false
         };
     },
+
+	componentDidMount: function() {
+	  	if (!this.state.disabled) {
+			this.init();
+	  	}
+  	},
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.showPluginView != prevState.showPluginView || this.state.showFaceView != prevState.showFaceView ) {
             this.refs.iScroll.withIScroll(function(iScroll) {
                 iScroll.refresh();
             });
         }
+		if (!this.state.disabled) {
+	  		this.init();
+	  	}
     },
     componentWillReceiveProps: function(nextProps) {
         var self = this;
@@ -313,6 +309,45 @@ let CustomerServiceMainUI = React.createClass({
         })
     },
 
+	onPullRefresh: function(resolve, reject) {
+		let self = this;
+	    setTimeout(function () {
+	      	self.addItem() ? resolve() : reject();
+	    }, 50000);
+	},
+	addItem() {
+		this.state.items.push(this.state.items);
+		this.setState({
+			items: this.state.items
+		});
+		return true;
+    },
+
+	handleRefresh: function() {
+		console.log('handleRefresh');
+		var self = this;
+      	return new Promise((resolve, reject) => {
+        	self.onPullRefresh(resolve, reject);
+      	});
+  	},
+	init: function() {
+		var self = this;
+      	if (!this.state.initialized) {
+        	WebPullToRefresh().init({
+          		contentEl: self.refs.refresh,
+          		ptrEl: self.refs.ptr,
+          		bodyEl: self.refs.body,
+          		distanceToRefresh:  undefined,
+          		loadingFunction: self.handleRefresh,
+          		resistance:  undefined,
+          		hammerOptions:  undefined
+        	});
+        	this.setState({
+          		initialized: true
+        	});
+      	}
+    },
+
     render: function() {
         console.log('render');
 
@@ -498,9 +533,16 @@ let CustomerServiceMainUI = React.createClass({
                 <section className="main">
                     <section className="content" id="content" style={contentStyle}>
                         <ReactIScroll ref="iScroll" iScroll={iScroll} options={iScrollOptions} onRefresh={this.onScrollRefresh} onScrollStart={this.onScrollStart} onScrollEnd={this.onScrollEnd}>
-                            <div>
-                                <div className="history-msg J-history-msg visibility">下拉加载历史纪录</div>
-                                <div id="chat-wrap" className="chat-wrap">
+                            <div ref="body">
+                                <div ref="ptr" className="history-msg J-history-msg ptr-element">
+						           <span className="genericon genericon-next"></span>
+						            <div className="loading">
+						              <span className="loading-ptr-1"></span>
+						              <span className="loading-ptr-2"></span>
+						              <span className="loading-ptr-3"></span>
+						           </div>
+                                </div>
+                                <div ref="refresh" className="chat-wrap">
                                     {messagesView}
                                 </div>
                             </div>
