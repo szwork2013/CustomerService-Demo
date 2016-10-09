@@ -21,8 +21,7 @@ const initialState = {
 export default function messageReducer(state = initialState, action) {
     switch (action.type) {
 
-        case ActionType.SEND_TEXT_MESSAGE:
-            {
+        case ActionType.SEND_TEXT_MESSAGE: {
                 var obj = _extends({}, state);
                 var id = state.count + 1;
                 var timeStamp = new Date().getTime();
@@ -37,16 +36,13 @@ export default function messageReducer(state = initialState, action) {
                 obj.count += 1;
                 return obj;
             }
-        case ActionType.SEND_TEXT_MESSAGE_SUCCESS:
-            {
+        case ActionType.SEND_TEXT_MESSAGE_SUCCESS: {
                 return state;
             }
-        case ActionType.SEND_TEXT_MESSAGE_ERROR:
-            {
+        case ActionType.SEND_TEXT_MESSAGE_ERROR: {
                 return state;
             }
-        case ActionType.SEND_IMAGE_MESSAGE:
-            {
+        case ActionType.SEND_IMAGE_MESSAGE: {
                 var obj = _extends({}, state);
                 var id = state.count + 1;
                 var timeStamp = new Date().getTime();
@@ -62,8 +58,7 @@ export default function messageReducer(state = initialState, action) {
                 obj.count += 1;
                 return obj;
             }
-        case ActionType.SEND_IMAGE_MESSAGE_PROGRESS:
-            {
+        case ActionType.SEND_IMAGE_MESSAGE_PROGRESS: {
                 var objs = _extends({}, state);
 
                 var  index = -1;
@@ -92,16 +87,41 @@ export default function messageReducer(state = initialState, action) {
                     return state;
                 }
             }
-        case ActionType.SEND_IMAGE_MESSAGE_SUCCESS:
-            {
+        case ActionType.SEND_IMAGE_MESSAGE_SUCCESS: {
                 var objs = _extends({}, state);
                 objs.status = ActionType.SEND_IMAGE_MESSAGE_SUCCESS;
                 return objs;
             }
-        case ActionType.SEND_IMAGE_MESSAGE_ERROR:
-            {
+        case ActionType.SEND_IMAGE_MESSAGE_ERROR: {
                 return state;
             }
+
+        case ActionType.LOAD_MORE_MESSAGE_REQUEST: {
+                var objs = _extends({}, state);
+                objs.status = ActionType.LOAD_MORE_MESSAGE_REQUEST;
+                return objs;
+            }
+        case ActionType.LOAD_MORE_MESSAGE_SUCCESS: {
+                var objs = _extends({}, state);
+                objs.status = ActionType.LOAD_MORE_MESSAGE_SUCCESS;
+                var id = state.count + 1;
+                var timeStamp = new Date().getTime();
+                var message = {
+                    messageID: id,
+                    type: ActionType.TEXT_MESSAGE,
+                    text: "loaded more",
+                    status: ActionType.SENDING,
+                    timeStamp: timeStamp,
+                };
+                objs.messages.push(message);
+                return objs;
+            }
+        case ActionType.LOAD_MORE_MESSAGE_ERROR: {
+                var objs = _extends({}, state);
+                objs.status = ActionType.LOAD_MORE_MESSAGE_ERROR;
+                return objs;
+            }
+
         default:
             return state;
     }

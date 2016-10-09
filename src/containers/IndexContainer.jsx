@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import ReactDom, { unstable_batchedUpdates } from 'react-dom';
 
-import iScroll from 'iscroll'
+import iScroll from '../../js/iscroll-probe'
 import ReactIScroll from 'react-iscroll'
 
 import MessageInputView from '../components/MessageInputView';
@@ -15,7 +15,7 @@ import LoadingView from '../components/LoadingView';
 
 import * as ActionType from '../constants/ActionType';
 
-import { sendTextMessage, sendImageMessage, uploadImageProgress, sendImageMessageSuccess} from '../actions/messageAction'
+import { sendTextMessage, sendImageMessage, uploadImageProgress, sendImageMessageSuccess, loadmoreMessage} from '../actions/messageAction'
 
 import Slide from '../components/Slide'
 
@@ -25,7 +25,8 @@ import WebPullToRefresh from '../../js/wptr.1.1';
 const iScrollOptions = {
     mouseWheel: true,
     scrollbars: false,
-    scrollX: true
+    scrollX: true,
+	probeType: 3
 }
 
 let ImageMessageCell = React.createClass({
@@ -52,53 +53,43 @@ let CustomerServiceMainUI = React.createClass({
             showSpeechView: false,
 
             items: [],
-            show: false,
 
             isRecording: false,
             shouldCancel: false,
 
+			loadingMore: false
 			// initialized: false,
 			// disabled: false
         };
     },
 
-	componentDidMount: function() {
-		//  	if (!this.state.disabled) {
-		// 	this.init();
-		//  	}
-  	},
     componentDidUpdate: function(prevProps, prevState) {
-        if (this.state.showPluginView != prevState.showPluginView || this.state.showFaceView != prevState.showFaceView ) {
+        if (this.state.showPluginView !== prevState.showPluginView || this.state.showFaceView !== prevState.showFaceView ) {
             this.refs.iScroll.withIScroll(function(iScroll) {
                 iScroll.refresh();
             });
         }
-		// if (!this.state.disabled) {
-	 //  		this.init();
-		//  	}
     },
     componentWillReceiveProps: function(nextProps) {
         var self = this;
+		if (nextProps.messageStatus === ActionType.LOAD_MORE_MESSAGE_SUCCESS || nextProps.messageStatus === ActionType.LOAD_MORE_MESSAGE_ERROR) {
+			this.setState({
+				items: nextProps.messages,
+				loadingMore: false
+			});
+		} else {
+			this.setState({
+				items: nextProps.messages,
+			});
+		}
 
-        if (nextProps.messageSendStatus == ActionType.SEND_IMAGE_MESSAGE_SUCCESS) {
-            self.setState({
-                items: nextProps.messages,
-                show: true
-            },function () {
-                this.refs.iScroll.withIScroll(function(iScroll) {
-                    iScroll.refresh();
-                });
-            });
-        } else {
-            self.setState({
-                items: nextProps.messages,
-                show: false
-            },function () {
-                this.refs.iScroll.withIScroll(function(iScroll) {
-                    iScroll.refresh();
-                });
-            });
-        }
+		// self.setState({
+		// 	items: nextProps.messages,
+		// },function () {
+		// 	this.refs.iScroll.withIScroll(function(iScroll) {
+		// 		iScroll.refresh();
+		// 	});
+		// });
     },
 
 
@@ -151,8 +142,11 @@ let CustomerServiceMainUI = React.createClass({
         window.SiLinJSBridge.previewImage(message.imageSrc);
     },
 
-    onScrollStart: function() {
-        // console.log('onScrollStart');
+	//页面滚动
+    onScrollStart: function(iScrollInstance) {
+// 		myScroll.x/y, current position
+// 		myScroll.directionX/Y, last direction (-1 down/right, 0 still, 1 up/left)
+        console.log('onScrollStart');
         if(!!document.activeElement){
             document.activeElement.blur();
         }
@@ -161,12 +155,36 @@ let CustomerServiceMainUI = React.createClass({
             this.setState({showPluginView: false, showFaceView: false});
         }
     },
+	scrollViewOnScroll: function(iScrollInstance) {
+		console.log('onScroll' + iScrollInstance.directionY + ' ' + iScrollInstance.y + ' ' + this.state.loadingMore + ' ' + ' ');
 
+		if (iScrollInstance.directionY !== 1 && iScrollInstance.y >= 0) {
+			if (!this.state.loadingMore) {
+				this.setState({
+					loadingMore: true
+				});
+				this.props.loadmoreMessage();
+
+
+				// var self = this;
+				//
+				// setTimeout(function() {
+				// 	var items = self.state.items;
+				// 	items.push(self.state.items);
+				// 	// this.state.items.push(this.state.items);
+				// 	self.setState({
+				// 		loadingMore: false,
+				// 		items: items
+				// 	});
+				// }, 1000);
+			}
+		}
+	},
     onScrollEnd: function(iScrollInstance) {
         // console.log('onScrollEnd');
     },
     onScrollRefresh: function(iScrollInstance) {
-        // console.log('onScrollRefresh');
+        console.log('onScrollRefresh');
         iScrollInstance.scrollTo(0,iScrollInstance.maxScrollY);
     },
 
@@ -532,15 +550,10 @@ let CustomerServiceMainUI = React.createClass({
             <div className="out-wrap">
                 <section className="main">
                     <section className="content" id="content" style={contentStyle}>
-                        <ReactIScroll ref="iScroll" iScroll={iScroll} options={iScrollOptions} onRefresh={this.onScrollRefresh} onScrollStart={this.onScrollStart} onScrollEnd={this.onScrollEnd}>
-                            <div>
-                                <div className="history-msg J-history-msg visibility">
-									下拉加载更多
-                                </div>
-                                <div className="chat-wrap">
-                                    {messagesView}
-                                </div>
-                            </div>
+                        <ReactIScroll ref="iScroll" iScroll={iScroll} options={iScrollOptions} onRefresh={this.onScrollRefresh} onScrollStart={this.onScrollStart} onScrollEnd={this.onScrollEnd} onScroll={this.scrollViewOnScroll}>
+							<div className="chat-wrap">
+								{messagesView}
+							</div>
                         </ReactIScroll>
                         {loading}
                     </section>
@@ -562,7 +575,7 @@ function mapStateToProps(state) {
 	return {
         messages: state.messageReducer.messages ,
 		count: state.messageReducer.count,
-        messageSendStatus: state.messageReducer.status
+        messageStatus: state.messageReducer.status
 	};
 }
 
@@ -570,7 +583,8 @@ module.exports = connect(mapStateToProps, {
 	sendTextMessage,
     sendImageMessage,
     uploadImageProgress,
-    sendImageMessageSuccess
+    sendImageMessageSuccess,
+	loadmoreMessage,
 })(CustomerServiceMainUI);
 
 const emojis =
