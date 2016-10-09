@@ -628,7 +628,15 @@ ul li {
     vertical-align: middle;
     padding-top: 8px;
     padding-bottom: 8px;
+    margin: auto;
+    width: 50%;
 }
+
+.inline_emoji_content {
+    display: inline;
+    vertical-align: middle;
+}
+
 
 .dots{
 	display: inline-block;

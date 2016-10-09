@@ -58,8 +58,7 @@ let CustomerServiceMainUI = React.createClass({
             shouldCancel: false,
 
 			loadingMore: false
-			// initialized: false,
-			// disabled: false
+
         };
     },
 
@@ -83,13 +82,6 @@ let CustomerServiceMainUI = React.createClass({
 			});
 		}
 
-		// self.setState({
-		// 	items: nextProps.messages,
-		// },function () {
-		// 	this.refs.iScroll.withIScroll(function(iScroll) {
-		// 		iScroll.refresh();
-		// 	});
-		// });
     },
 
 
@@ -156,29 +148,17 @@ let CustomerServiceMainUI = React.createClass({
         }
     },
 	scrollViewOnScroll: function(iScrollInstance) {
-		console.log('onScroll' + iScrollInstance.directionY + ' ' + iScrollInstance.y + ' ' + this.state.loadingMore + ' ' + ' ');
-
-		if (iScrollInstance.directionY !== 1 && iScrollInstance.y >= 0) {
-			if (!this.state.loadingMore) {
-				this.setState({
-					loadingMore: true
-				});
-				this.props.loadmoreMessage();
-
-
-				// var self = this;
-				//
-				// setTimeout(function() {
-				// 	var items = self.state.items;
-				// 	items.push(self.state.items);
-				// 	// this.state.items.push(this.state.items);
-				// 	self.setState({
-				// 		loadingMore: false,
-				// 		items: items
-				// 	});
-				// }, 1000);
-			}
-		}
+		// console.log('onScroll' + iScrollInstance.directionY + ' ' + iScrollInstance.y + ' ' + this.state.loadingMore + ' ' + ' ');
+		//
+		// if (iScrollInstance.directionY !== 1 && iScrollInstance.y >= 0) {
+		// 	if (!this.state.loadingMore) {
+		// 		this.setState({
+		// 			loadingMore: true
+		// 		});
+		// 		this.props.loadmoreMessage();
+		//
+		// 	}
+		// }
 	},
     onScrollEnd: function(iScrollInstance) {
         // console.log('onScrollEnd');
@@ -230,32 +210,11 @@ let CustomerServiceMainUI = React.createClass({
         var self = this;
         window.SiLinJSBridge.onVoiceRecordEnd(function (result){
             console.log('window.SiLinJSBridge.onVoiceRecordEnd: ' + result);
-            // var num = self.getRandomArbitrary(0, 10);
-            // console.log(num);
-            // if (num % 2 == 0) {
-            //     result = 'hello world';
-            // } else {
-            //     result = '';
-            // }
-
             if (result.length == 0) {
                 self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
-
             } else {
-                // self.props.sendTextMessage(result);
-                //
-                // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
-
-                // self.setState({
-                //     showSpeechView: false,
-                //     showPluginView: false,
-                //     showFaceView: false,
-                //     inputText:result
-                // });
                 self.test(result);
             }
-
-
         });
     },
     endRecording: function() {
@@ -263,37 +222,20 @@ let CustomerServiceMainUI = React.createClass({
             isRecording: false,
             shouldCancel: false
         });
-
         var self = this;
         window.SiLinJSBridge.endRecording(function(result){
             console.log('window.SiLinJSBridge.endRecording: ' + result);
 
-            // var num = self.getRandomArbitrary(0, 10);
-            // console.log(num);
-            // if (num % 2 == 0) {
-            //     result = 'hello world';
-            // } else {
-            //     result = '';
-            // }
-
             if (!result || result == 'null' || result.length == 0) {
                 self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
-
-                // result = '你不说话，我怎么知道你想要知道什么(请重新发送语音消息)';
-
             } else {
-                // self.props.sendTextMessage(result);
-                // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
                 self.test(result);
             }
-
-            // self.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
         });
     },
 
     test: function(result){
         this.setState({showSpeechView: false, showPluginView: false, showFaceView: false, inputText:result});
-        // this.refs.ipt.focus();
     },
 
     cancelRecording: function() {
@@ -313,7 +255,6 @@ let CustomerServiceMainUI = React.createClass({
     },
 
     emojiClick: function(emoji) {
-        // var txt = this.state.inputText + ' ' + emoji + ' ';
         var txt = this.state.inputText + emoji;
         console.log(txt + 'length = ' + txt.length);
         this.setState({
@@ -326,46 +267,24 @@ let CustomerServiceMainUI = React.createClass({
             inputText: txt.substring(0,txt.length-1)
         })
     },
-
-	// onPullRefresh: function(resolve, reject) {
-	// 	let self = this;
-	//     setTimeout(function () {
-	//       	self.addItem() ? resolve() : reject();
-	//     }, 50000);
-	// },
-	// addItem() {
-	// 	this.state.items.push(this.state.items);
-	// 	this.setState({
-	// 		items: this.state.items
-	// 	});
-	// 	return true;
-    // },
-	//
-	// handleRefresh: function() {
-	// 	console.log('handleRefresh');
-	// 	var self = this;
-    //   	return new Promise((resolve, reject) => {
-    //     	self.onPullRefresh(resolve, reject);
-    //   	});
- //  	},
-	// init: function() {
-	// 	var self = this;
-    //   	if (!this.state.initialized) {
-    //     	WebPullToRefresh().init({
-    //       		contentEl: self.refs.refresh,
-    //       		ptrEl: self.refs.ptr,
-    //       		bodyEl: self.refs.body,
-    //       		distanceToRefresh:  undefined,
-    //       		loadingFunction: self.handleRefresh,
-    //       		resistance:  undefined,
-    //       		hammerOptions:  undefined
-    //     	});
-    //     	this.setState({
-    //       		initialized: true
-    //     	});
-    //   	}
-    // },
-
+	S4: function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    },
+    guid:function () {
+        return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
+    },
+	randomString: function (len) {
+		len = len || 32;
+		var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+		var maxPos = chars.length;
+		var pwd = '';
+		for (var i = 0; i < len; i++) {
+			pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+		}
+		var guid = this.guid();
+		// console.log(guid);
+		return guid;
+	},
     render: function() {
         console.log('render');
 
@@ -380,10 +299,8 @@ let CustomerServiceMainUI = React.createClass({
 
         var faceView = null;
         if (this.state.showFaceView) {
-            // faceView = <FaceBoardView emojiClick={this.emojiClick} />;
-
             var emojiArr = [];
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < emojis.length/20; i++) {
                 var start = i * 20;
                 var end = start + 20;
                 emojiArr.push(emojis.slice(start, end));
@@ -410,8 +327,7 @@ let CustomerServiceMainUI = React.createClass({
         } else {
             inputView = (<MessageInputView shouldUp={shouldUp} showSendBtn={showSendBtn} inputText={this.state.inputText} inputTextChange={this.inputTextChange} inputOnFocus={this.onFocus} sendButtonClick={this.sendButtonClick} plusButtonClick={this.plusButtonClick} faceButtonClick={this.faceButtonClick} switchBtnClick={this.switchBtnClick}/>);
         }
-        // var messagesView = this.props.messages.map(function(item, index) {
-        // <li className="text-message-session" key={index}>{item.messageID} :{item.text} </li>
+
         var messagesView = this.state.items.map(function(item, index) {
 			var hour = (new Date(item.timeStamp)).getHours();
 			if (String(hour).length === 1) {
@@ -431,6 +347,44 @@ let CustomerServiceMainUI = React.createClass({
 				);
 			}
             if (item.type === ActionType.TEXT_MESSAGE) {
+
+				var txtContent = [];
+				var matchs = item.text.match(/\[.{1,3}\]/g);
+
+				console.log('match ');
+				console.log(matchs);
+
+				var content = item.text;
+
+				if (matchs) {
+
+					for (var i = 0; i < matchs.length; i++) {
+						var m = matchs[i];
+						var matchindex = content.indexOf(m);
+						var first = content.slice(0, matchindex);
+						var last = content.slice(matchindex + m.length);
+						content = last;
+
+ 						txtContent.push(<span key={self.randomString()}>{first}</span>);
+
+						var src;
+						for (var j = 0; j < emojis.length; j++) {
+							var emoji = emojis[j];
+							if (emoji.name === m) {
+								src = emoji.src;
+								console.log(src);
+								break;
+							}
+						}
+ 						txtContent.push(<img key={self.randomString()} className="inline_emoji_content" style={{'width': '24px','height': '24px'}} src={src}/>);
+
+					}
+ 					txtContent.push(<span key={self.randomString()}>{content}</span>);
+				} else {
+
+					txtContent.push(<span key={self.randomString()}>{item.text}</span>);
+				}
+
                 if (index % 2 == 0) {
                     return (
 						<div key={index}>
@@ -443,7 +397,7 @@ let CustomerServiceMainUI = React.createClass({
 	                                <div className="bubble-arrow "></div>
 	                                <article className="answer-wrap J-answer-wrap ">
 	                                    <div className="J-answerContent-wrap answer-inner-wrap ">
-	                                        <div>{item.text}</div>
+	                                        <span>{txtContent}</span>
 	                                    </div>
 	                                </article>
 	                            </div>
@@ -459,7 +413,7 @@ let CustomerServiceMainUI = React.createClass({
 	                            <div className="message " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
 	                                <div className="bubble-arrow " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
 	                                </div>
-	                                <article className="ask-wrap ">{item.text}</article>
+	                                <article className="ask-wrap">{txtContent}</article>
 	                            </div>
 	                            <div className="visitor-avatar ">
 	                                <img src="../../img/pEMnDuflOnsZLkH.jpg"/>
@@ -472,9 +426,7 @@ let CustomerServiceMainUI = React.createClass({
 
             }
             if (item.type === ActionType.IMAGE_MESSAGE) {
-                // console.log(item.progress);
                 var divStyle = {
-                    // backgroundImage: 'url(' + item.imageSrc + ')',
                     maxWidth:'150px',
                     maxHeight: '150px'
                 };
@@ -495,44 +447,8 @@ let CustomerServiceMainUI = React.createClass({
 	                        </div>
 	                    </section>
 					</div>
-                    // <li  className="J-wrap-answer-section message-wrap robot" data-libversion="undefined" data-message-type="robot" message-wrap="" key={index}>
-                    //     <div className="service-avatar ">
-                    //         <img src="../../img/zVBCcOVAtHFuRJJ.png "/>
-                    //     </div>
-                    //     <div className="message ">
-                    //         <div className="bubble-arrow "></div>
-                    //         <article className="answer-wrap J-answer-wrap ">
-                    //             <div className="J-answerContent-wrap answer-inner-wrap ">
-                    //                 <div></div>
-                    //                 <img src={item.imageSrc} style={divStyle}></img>
-                    //             </div>
-                    //         </article>
-                    //     </div>
-                    // </li>
-                );
-
-                // if (item.progress == 1) {
-                //     return (
-                //         <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
-                //             <p>{item.messageID}:{item.progress}</p>
-                //             <div className="weui_uploader_file" style={divStyle}>
-                //             </div>
-                //         </li>
-                //     );
-                // } else {
-                //     var num  = item.progress;
-                //     num = num.toFixed(2);
-                //
-                //     return (
-                //         <li className="text-message-session" key={index} onClick={self.imageCellClick.bind(null, index)}>
-                //             <p>{item.messageID}:{item.progress}</p>
-                //             <div className="weui_uploader_file weui_uploader_status" style={divStyle}>
-                //                 <div className="weui_uploader_status_content">{num * 100}%</div>
-                //             </div>
-                //         </li>
-                //     );
-                // }
-            }
+                 );
+             }
             return null;
         });
 
@@ -587,84 +503,126 @@ module.exports = connect(mapStateToProps, {
 	loadmoreMessage,
 })(CustomerServiceMainUI);
 
-const emojis =
-   ["😃",
-    "😍",
-    "😒",
-    "😳",
-    "😁",
-    "😘",
-    "😉",
-    "😠",
-    "😞",
-    "😞",
-    "😭",
-    "😝",
-    "😡",
-    "😣",
-    "😔",
-    "😄",
-    "😷",
-    "😚",
-    "😓",
-    "😂",
-    "😊",
-    "😢",
-    "😜",
-    "😨",
-    "😰",
-    "😲",
-    "😏",
-    "😱",
-    "😪",
-    "😖",
-    "😌",
-    "👿",
-    "👻",
-    "🎅",
-    "👧",
-    "👦",
-    "👩",
-    "👨",
-    "🐶",
-    "🐱",
-    "👍",
-    "👎",
-    "👊",
-    "✊",
-    "✌",
-    "💪",
-    "💪",
-    "👈",
-    "👆",
-    "👉",
-    "👇",
-    "👌",
-    "❤",
-    "💔",
-    "🙏",
-    "☀",
-    "🌙",
-    "🌟",
-    "⚡",
-    "☁",
-    "☔",
-    "🍁",
-    "🌻",
-    "🍃",
-    "👗",
-    "🎀",
-    "👄",
-    "🌹",
-    "☕",
-    "🎂",
-    "🕙",
-    "🍺",
-    "🔍",
-    "📱",
-    "🏠",
-    "🚗",
-    "🎁",
-    "⚽",
-    "💣",
-    "💎"];
+
+
+const emojis = [];
+emojis.push({src:"img/wechat/100.gif", name:"[微笑]"});
+emojis.push({src:"img/wechat/101.gif", name:"[伤心]"});
+emojis.push({src:"img/wechat/102.gif", name:"[美女]"});
+emojis.push({src:"img/wechat/103.gif", name:"[发呆]"});
+emojis.push({src:"img/wechat/104.gif", name:"[墨镜]"});
+emojis.push({src:"img/wechat/105.gif", name:"[哭]"});
+emojis.push({src:"img/wechat/106.gif", name:"[羞]"});
+emojis.push({src:"img/wechat/107.gif", name:"[哑]"});
+emojis.push({src:"img/wechat/108.gif", name:"[睡]"});
+emojis.push({src:"img/wechat/109.gif", name:"[哭]"});
+emojis.push({src:"img/wechat/110.gif", name:"[囧]"});
+emojis.push({src:"img/wechat/111.gif", name:"[怒]"});
+emojis.push({src:"img/wechat/112.gif", name:"[调皮]"});
+emojis.push({src:"img/wechat/113.gif", name:"[笑]"});
+emojis.push({src:"img/wechat/114.gif", name:"[惊讶]"});
+emojis.push({src:"img/wechat/115.gif", name:"[难过]"});
+emojis.push({src:"img/wechat/116.gif", name:"[酷]"});
+emojis.push({src:"img/wechat/117.gif", name:"[汗]"});
+emojis.push({src:"img/wechat/118.gif", name:"[抓狂]"});
+emojis.push({src:"img/wechat/119.gif", name:"[吐]"});
+emojis.push({src:"img/wechat/120.gif", name:"[笑]"});
+emojis.push({src:"img/wechat/121.gif", name:"[快乐]"});
+emojis.push({src:"img/wechat/122.gif", name:"[奇]"});
+emojis.push({src:"img/wechat/123.gif", name:"[傲]"});
+emojis.push({src:"img/wechat/124.gif", name:"[饿]"});
+emojis.push({src:"img/wechat/125.gif", name:"[累]"});
+emojis.push({src:"img/wechat/126.gif", name:"[吓]"});
+emojis.push({src:"img/wechat/127.gif", name:"[汗]"});
+emojis.push({src:"img/wechat/128.gif", name:"[高兴]"});
+emojis.push({src:"img/wechat/129.gif", name:"[闲]"});
+emojis.push({src:"img/wechat/130.gif", name:"[努力]"});
+emojis.push({src:"img/wechat/131.gif", name:"[骂]"});
+emojis.push({src:"img/wechat/132.gif", name:"[疑问]"});
+emojis.push({src:"img/wechat/133.gif", name:"[秘密]"});
+emojis.push({src:"img/wechat/134.gif", name:"[乱]"});
+emojis.push({src:"img/wechat/135.gif", name:"[疯]"});
+emojis.push({src:"img/wechat/136.gif", name:"[哀]"});
+emojis.push({src:"img/wechat/137.gif", name:"[鬼]"});
+emojis.push({src:"img/wechat/138.gif", name:"[打击]"});
+emojis.push({src:"img/wechat/139.gif", name:"[bye]"});
+emojis.push({src:"img/wechat/140.gif", name:"[汗]"});
+emojis.push({src:"img/wechat/141.gif", name:"[抠]"});
+emojis.push({src:"img/wechat/142.gif", name:"[鼓掌]"});
+emojis.push({src:"img/wechat/143.gif", name:"[糟糕]"});
+emojis.push({src:"img/wechat/144.gif", name:"[恶搞]"});
+emojis.push({src:"img/wechat/145.gif", name:"[左哼哼]"});
+emojis.push({src:"img/wechat/146.gif", name:"[右哼哼]"});
+emojis.push({src:"img/wechat/147.gif", name:"[累]"});
+emojis.push({src:"img/wechat/148.gif", name:"[看]"});
+emojis.push({src:"img/wechat/149.gif", name:"[委屈]"});
+emojis.push({src:"img/wechat/150.gif", name:"[难过]"});
+emojis.push({src:"img/wechat/151.gif", name:"[坏]"});
+emojis.push({src:"img/wechat/152.gif", name:"[亲]"});
+emojis.push({src:"img/wechat/153.gif", name:"[吓]"});
+emojis.push({src:"img/wechat/154.gif", name:"[可怜]"});
+emojis.push({src:"img/wechat/155.gif", name:"[刀]"});
+emojis.push({src:"img/wechat/156.gif", name:"[水果]"});
+emojis.push({src:"img/wechat/157.gif", name:"[酒]"});
+emojis.push({src:"img/wechat/158.gif", name:"[篮球]"});
+emojis.push({src:"img/wechat/159.gif", name:"[乒乓]"});
+emojis.push({src:"img/wechat/160.gif", name:"[咖啡]"});
+emojis.push({src:"img/wechat/161.gif", name:"[美食]"});
+emojis.push({src:"img/wechat/162.gif", name:"[动物]"});
+emojis.push({src:"img/wechat/163.gif", name:"[鲜花]"});
+emojis.push({src:"img/wechat/164.gif", name:"[枯]"});
+emojis.push({src:"img/wechat/165.gif", name:"[唇]"});
+emojis.push({src:"img/wechat/166.gif", name:"[爱]"});
+emojis.push({src:"img/wechat/167.gif", name:"[分手]"});
+emojis.push({src:"img/wechat/168.gif", name:"[生日]"});
+emojis.push({src:"img/wechat/169.gif", name:"[电]"});
+emojis.push({src:"img/wechat/170.gif", name:"[炸弹]"});
+emojis.push({src:"img/wechat/171.gif", name:"[刀子]"});
+emojis.push({src:"img/wechat/172.gif", name:"[足球]"});
+emojis.push({src:"img/wechat/173.gif", name:"[瓢虫]"});
+emojis.push({src:"img/wechat/174.gif", name:"[翔]"});
+emojis.push({src:"img/wechat/175.gif", name:"[月亮]"});
+emojis.push({src:"img/wechat/176.gif", name:"[太阳]"});
+emojis.push({src:"img/wechat/177.gif", name:"[礼物]"});
+emojis.push({src:"img/wechat/178.gif", name:"[抱抱]"});
+emojis.push({src:"img/wechat/179.gif", name:"[拇指]"});
+emojis.push({src:"img/wechat/180.gif", name:"[贬低]"});
+emojis.push({src:"img/wechat/181.gif", name:"[握手]"});
+emojis.push({src:"img/wechat/182.gif", name:"[剪刀手]"});
+emojis.push({src:"img/wechat/183.gif", name:"[抱拳]"});
+emojis.push({src:"img/wechat/184.gif", name:"[勾引]"});
+emojis.push({src:"img/wechat/185.gif", name:"[拳头]"});
+emojis.push({src:"img/wechat/186.gif", name:"[小拇指]"});
+emojis.push({src:"img/wechat/187.gif", name:"[拇指八]"});
+emojis.push({src:"img/wechat/188.gif", name:"[食指]"});
+emojis.push({src:"img/wechat/189.gif", name:"[ok]"});
+emojis.push({src:"img/wechat/190.gif", name:"[情侣]"});
+emojis.push({src:"img/wechat/191.gif", name:"[爱心]"});
+emojis.push({src:"img/wechat/192.gif", name:"[蹦哒]"});
+emojis.push({src:"img/wechat/193.gif", name:"[颤抖]"});
+emojis.push({src:"img/wechat/194.gif", name:"[怄气]"});
+emojis.push({src:"img/wechat/195.gif", name:"[跳舞]"});
+emojis.push({src:"img/wechat/196.gif", name:"[发呆]"});
+emojis.push({src:"img/wechat/197.gif", name:"[背着]"});
+emojis.push({src:"img/wechat/198.gif", name:"[伸手]"});
+emojis.push({src:"img/wechat/199.gif", name:"[耍帅]"});
+emojis.push({src:"img/wechat/200.png", name:"[微笑]"});
+emojis.push({src:"img/wechat/201.png", name:"[生病]"});
+emojis.push({src:"img/wechat/202.png", name:"[哭泣]"});
+emojis.push({src:"img/wechat/203.png", name:"[吐舌]"});
+emojis.push({src:"img/wechat/204.png", name:"[迷糊]"});
+emojis.push({src:"img/wechat/205.png", name:"[瞪眼]"});
+emojis.push({src:"img/wechat/206.png", name:"[恐怖]"});
+emojis.push({src:"img/wechat/207.png", name:"[忧愁]"});
+emojis.push({src:"img/wechat/208.png", name:"[眨眉]"});
+emojis.push({src:"img/wechat/209.png", name:"[闭眼]"});
+emojis.push({src:"img/wechat/210.png", name:"[鄙视]"});
+emojis.push({src:"img/wechat/211.png", name:"[阴暗]"});
+emojis.push({src:"img/wechat/212.png", name:"[小鬼]"});
+emojis.push({src:"img/wechat/213.png", name:"[礼物]"});
+emojis.push({src:"img/wechat/214.png", name:"[拜佛]"});
+emojis.push({src:"img/wechat/215.png", name:"[力量]"});
+emojis.push({src:"img/wechat/216.png", name:"[金钱]"});
+emojis.push({src:"img/wechat/217.png", name:"[蛋糕]"});
+emojis.push({src:"img/wechat/218.png", name:"[彩带]"});
+emojis.push({src:"img/wechat/219.png", name:"[礼物]"});
