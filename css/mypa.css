@@ -246,7 +246,7 @@ body {
 .out-wrap .main .content {
     position: absolute;
     width: 100%;
-    top: 10px;
+    top: -20px;
     bottom: 52px
 }
 .out-wrap .main .content .history-msg {
