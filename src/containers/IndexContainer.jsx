@@ -101,9 +101,44 @@ let CustomerServiceMainUI = React.createClass({
         }, TIMER_NAME);
     },
     inputTextChange: function (text) {
-        this.setState({
-            inputText: text
-        });
+
+		var txt = this.state.inputText;
+		var matchs = txt.match(/\[.{1,3}\]/g);
+		console.log(matchs);
+		if (txt.length - text.length  === 1) {
+			if (matchs) {
+				if (matchs.length > 0) {
+					var m = matchs[matchs.length - 1];
+					var lastIndex = txt.lastIndexOf(m);
+					if (lastIndex + m.length === txt.length) {
+						this.setState({
+				            inputText: txt.substring(0, lastIndex)
+				        })
+					} else {
+						this.setState({
+				            inputText: text
+				        });
+					}
+				} else {
+					this.setState({
+			            inputText: text
+			        });
+				}
+			} else {
+				this.setState({
+		            inputText: text
+		        });
+			}
+		} else {
+			this.setState({
+				inputText: text
+			});
+		}
+
+
+		// this.setState({
+        //     inputText: text
+        // });
     },
     sendButtonClick: function(text) {
         this.setState({
@@ -263,9 +298,32 @@ let CustomerServiceMainUI = React.createClass({
     },
     deleteEmojiAction: function() {
         var txt = this.state.inputText;
-        this.setState({
-            inputText: txt.substring(0,txt.length-1)
-        })
+
+		var matchs = txt.match(/\[.{1,3}\]/g);
+		console.log(matchs);
+		if (matchs) {
+			if (matchs.length > 0) {
+				var m = matchs[matchs.length - 1];
+				var lastIndex = txt.lastIndexOf(m);
+				if (lastIndex + m.length === txt.length) {
+					this.setState({
+			            inputText: txt.substring(0, lastIndex)
+			        })
+				} else {
+					this.setState({
+			            inputText: txt.substring(0,txt.length-1)
+			        })
+				}
+			} else {
+				this.setState({
+		            inputText: txt.substring(0,txt.length-1)
+		        })
+			}
+		} else {
+			this.setState({
+				inputText: txt.substring(0,txt.length-1)
+			})
+		}
     },
 	S4: function() {
         return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -365,7 +423,7 @@ let CustomerServiceMainUI = React.createClass({
 						var last = content.slice(matchindex + m.length);
 						content = last;
 
- 						txtContent.push(<span key={self.randomString()}>{first}</span>);
+ 						txtContent.push(<span key={'a'+i}>{first}</span>);
 
 						var src;
 						for (var j = 0; j < emojis.length; j++) {
@@ -376,13 +434,13 @@ let CustomerServiceMainUI = React.createClass({
 								break;
 							}
 						}
- 						txtContent.push(<img key={self.randomString()} className="inline_emoji_content" style={{'width': '24px','height': '24px'}} src={src}/>);
+ 						txtContent.push(<img key={'b'+i} className="inline_emoji_content" style={{'width': '24px','height': '24px'}} src={src}/>);
 
 					}
- 					txtContent.push(<span key={self.randomString()}>{content}</span>);
+ 					txtContent.push(<span key={'b'+i}>{content}</span>);
 				} else {
 
-					txtContent.push(<span key={self.randomString()}>{item.text}</span>);
+					txtContent.push(<span key={index}>{item.text}</span>);
 				}
 
                 if (index % 2 == 0) {
