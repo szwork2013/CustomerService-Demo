@@ -76,6 +76,7 @@ let CustomerServiceMainUI = React.createClass({
 				items: nextProps.messages,
 				loadingMore: false
 			});
+            window.SiLinJSBridge.showLoading(false);
 		} else {
 			this.setState({
 				items: nextProps.messages,
@@ -108,17 +109,32 @@ let CustomerServiceMainUI = React.createClass({
 		if (txt.length - text.length  === 1) {
 			if (matchs) {
 				if (matchs.length > 0) {
-					var m = matchs[matchs.length - 1];
-					var lastIndex = txt.lastIndexOf(m);
-					if (lastIndex + m.length === txt.length) {
-						this.setState({
-				            inputText: txt.substring(0, lastIndex)
-				        })
-					} else {
-						this.setState({
-				            inputText: text
-				        });
-					}
+                    var m = matchs[matchs.length - 1];
+
+                    var includeEmoji = false;
+                    for (var i = 0; i < emojis.length; i++) {
+                        var e = emojis[i];
+                        if (m === e.name) {
+                            includeEmoji = true;
+                            break;
+                        }
+                    }
+                    if (includeEmoji) {
+                        var lastIndex = txt.lastIndexOf(m);
+        				if (lastIndex + m.length === txt.length) {
+        					this.setState({
+        			            inputText: txt.substring(0, lastIndex)
+        			        })
+        				} else {
+        					this.setState({
+        			            inputText: txt.substring(0,txt.length-1)
+        			        })
+        				}
+                    } else {
+                        this.setState({
+                            inputText: txt.substring(0,txt.length-1)
+                        })
+    				}
 				} else {
 					this.setState({
 			            inputText: text
@@ -173,7 +189,7 @@ let CustomerServiceMainUI = React.createClass({
     onScrollStart: function(iScrollInstance) {
 // 		myScroll.x/y, current position
 // 		myScroll.directionX/Y, last direction (-1 down/right, 0 still, 1 up/left)
-        console.log('onScrollStart');
+        // console.log('onScrollStart');
         if(!!document.activeElement){
             document.activeElement.blur();
         }
@@ -184,16 +200,16 @@ let CustomerServiceMainUI = React.createClass({
     },
 	scrollViewOnScroll: function(iScrollInstance) {
 		// console.log('onScroll' + iScrollInstance.directionY + ' ' + iScrollInstance.y + ' ' + this.state.loadingMore + ' ' + ' ');
-		//
-		// if (iScrollInstance.directionY !== 1 && iScrollInstance.y >= 0) {
-		// 	if (!this.state.loadingMore) {
-		// 		this.setState({
-		// 			loadingMore: true
-		// 		});
-		// 		this.props.loadmoreMessage();
-		//
-		// 	}
-		// }
+
+		if (iScrollInstance.directionY !== 1 && iScrollInstance.y > 40) {
+			if (!this.state.loadingMore) {
+				this.setState({
+					loadingMore: true
+				});
+                window.SiLinJSBridge.showLoading(true);
+				this.props.loadmoreMessage();
+			}
+		}
 	},
     onScrollEnd: function(iScrollInstance) {
         // console.log('onScrollEnd');
@@ -304,15 +320,30 @@ let CustomerServiceMainUI = React.createClass({
 		if (matchs) {
 			if (matchs.length > 0) {
 				var m = matchs[matchs.length - 1];
-				var lastIndex = txt.lastIndexOf(m);
-				if (lastIndex + m.length === txt.length) {
-					this.setState({
-			            inputText: txt.substring(0, lastIndex)
-			        })
-				} else {
-					this.setState({
-			            inputText: txt.substring(0,txt.length-1)
-			        })
+
+                var includeEmoji = false;
+                for (var i = 0; i < emojis.length; i++) {
+                    var e = emojis[i];
+                    if (m === e.name) {
+                        includeEmoji = true;
+                        break;
+                    }
+                }
+                if (includeEmoji) {
+                    var lastIndex = txt.lastIndexOf(m);
+    				if (lastIndex + m.length === txt.length) {
+    					this.setState({
+    			            inputText: txt.substring(0, lastIndex)
+    			        })
+    				} else {
+    					this.setState({
+    			            inputText: txt.substring(0,txt.length-1)
+    			        })
+    				}
+                } else {
+                    this.setState({
+                        inputText: txt.substring(0,txt.length-1)
+                    })
 				}
 			} else {
 				this.setState({
@@ -325,24 +356,7 @@ let CustomerServiceMainUI = React.createClass({
 			})
 		}
     },
-	S4: function() {
-        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    },
-    guid:function () {
-        return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
-    },
-	randomString: function (len) {
-		len = len || 32;
-		var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
-		var maxPos = chars.length;
-		var pwd = '';
-		for (var i = 0; i < len; i++) {
-			pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-		}
-		var guid = this.guid();
-		// console.log(guid);
-		return guid;
-	},
+
     render: function() {
         console.log('render');
 

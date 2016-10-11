@@ -113,7 +113,7 @@ export default function messageReducer(state = initialState, action) {
                     status: ActionType.SENDING,
                     timeStamp: timeStamp,
                 };
-                objs.messages.push(message);
+                objs.messages.unshift(message);
                 return objs;
             }
         case ActionType.LOAD_MORE_MESSAGE_ERROR: {

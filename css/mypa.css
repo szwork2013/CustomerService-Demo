@@ -246,8 +246,9 @@ body {
 .out-wrap .main .content {
     position: absolute;
     width: 100%;
-    top: -20px;
-    bottom: 52px
+    top: 0px;
+    bottom: 52px;
+    padding-top: 10px;
 }
 .out-wrap .main .content .history-msg {
     color: #acacac;
@@ -263,7 +264,9 @@ body {
     overflow: hidden
 }
 .out-wrap .main .chat-wrap {
-    padding: 0 10px
+    padding: 0 10px;
+    /*min-height: 800px;*/
+    min-height: 101%;
 }
 .out-wrap .main .chat-wrap:after {
     visibility: hidden;
