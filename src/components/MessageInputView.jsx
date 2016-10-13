@@ -24,7 +24,7 @@ var MessageInputView = React.createClass({
 
     componentWillReceiveProps: function(nextProps) {
 
-        console.log('componentWillReceiveProps');
+
 
         // if (nextProps.inputText.length > 0) {
         //     this.setState({

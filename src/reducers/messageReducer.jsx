@@ -33,6 +33,7 @@ export default function messageReducer(state = initialState, action) {
                     status: ActionType.SENDING
                 };
                 obj.messages.push(txtMessage);
+                // obj.messages = [].concat(obj.messages);
                 obj.count += 1;
                 return obj;
             }
@@ -55,12 +56,13 @@ export default function messageReducer(state = initialState, action) {
                     progress: 0
                 };
                 obj.messages.push(message);
+                // obj.messages = [].concat(obj.messages);
                 obj.count += 1;
                 return obj;
             }
         case ActionType.SEND_IMAGE_MESSAGE_PROGRESS: {
                 var objs = _extends({}, state);
-
+                // var messages = objs.messages;
                 var  index = -1;
                 var id = -1;
                 for (var i = 0; i < objs.messages.length; i++) {
@@ -81,8 +83,11 @@ export default function messageReducer(state = initialState, action) {
                         status: ActionType.SENDING,
                         progress: action.progress
                     };
+
                     objs.messages.splice(index, 1, message);
+                    // objs.messages = [].concat(objs.messages);
                     return objs;
+                    // return _extends({}, objs);
                 } else {
                     return state;
                 }
@@ -103,6 +108,7 @@ export default function messageReducer(state = initialState, action) {
             }
         case ActionType.LOAD_MORE_MESSAGE_SUCCESS: {
                 var objs = _extends({}, state);
+                // var objs = state.clone();
                 objs.status = ActionType.LOAD_MORE_MESSAGE_SUCCESS;
                 var id = state.count + 1;
                 var timeStamp = new Date().getTime();
@@ -114,6 +120,7 @@ export default function messageReducer(state = initialState, action) {
                     timeStamp: timeStamp,
                 };
                 objs.messages.unshift(message);
+                // objs.messages = [].concat(objs.messages);
                 return objs;
             }
         case ActionType.LOAD_MORE_MESSAGE_ERROR: {

@@ -21,7 +21,17 @@ import Slide from '../components/Slide'
 
 import WebPullToRefresh from '../../js/wptr.1.1';
 
-
+var _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
+        for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+            }
+        }
+    }
+    return target;
+};
 const iScrollOptions = {
     mouseWheel: true,
     scrollbars: false,
@@ -68,16 +78,26 @@ let CustomerServiceMainUI = React.createClass({
                 iScroll.refresh();
             });
         }
+
+        // this.refs.iScroll.withIScroll(function(iScroll) {
+        //     iScroll.refresh();
+        // });
     },
+
     componentWillReceiveProps: function(nextProps) {
+
+        console.log('componentWillReceiveProps');
+
         var self = this;
 		if (nextProps.messageStatus === ActionType.LOAD_MORE_MESSAGE_SUCCESS || nextProps.messageStatus === ActionType.LOAD_MORE_MESSAGE_ERROR) {
+            // var items = [].concat(nextProps.messages);
 			this.setState({
 				items: nextProps.messages,
 				loadingMore: false
 			});
             window.SiLinJSBridge.showLoading(false);
 		} else {
+            // var items = [].concat(nextProps.messages);
 			this.setState({
 				items: nextProps.messages,
 			});
@@ -226,17 +246,33 @@ let CustomerServiceMainUI = React.createClass({
         window.SiLinJSBridge.chooseImageWithTypeCallback(index, {
             chooseImageSuccess: function(url) {
                 console.log('chooseImageSuccess ' + url);
-                self.props.sendImageMessage(url);
+                // self.props.sendImageMessage(url);
+                self.sendImageMessage(url);
             },
             uploadImageProgress: function(url, progress) {
                 console.log('uploadImageProgress ' + url + ' ' + progress);
-                self.props.uploadImageProgress(url, progress);
+                // self.props.uploadImageProgress(url, progress);
+                self.updateProgress(url, progress);
             },
             uploadImageSuccess: function(url) {
                 console.log('uploadImageSuccess ' + url);
-                self.props.sendImageMessageSuccess(url);
+                // self.props.sendImageMessageSuccess(url);
+                self.updateSuccess(url);
+            },
+            uploadImageError: function(url) {
+                console.log('uploadImageError ' + url);
+                // self.props.sendImageMessageSuccess(url);
             }
         });
+    },
+    sendImageMessage: function (url, progress) {
+        this.props.sendImageMessage(url, progress);
+    },
+    updateProgress: function(url, progress) {
+        this.props.uploadImageProgress(url, progress);
+    },
+    updateSuccess: function(url) {
+        this.props.sendImageMessageSuccess(url);
     },
 
     getRandomArbitrary: function (min, max) {
@@ -502,7 +538,7 @@ let CustomerServiceMainUI = React.createClass({
                     maxWidth:'150px',
                     maxHeight: '150px'
                 };
-
+                console.log('item.progress ' + item.progress);
                 return (
 					<div  key={index}>
 						{timeCell}
@@ -511,6 +547,7 @@ let CustomerServiceMainUI = React.createClass({
 	                            <div className="bubble-arrow " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
 	                            </div>
 	                            <article className="ask-wrap ">
+                                    <p>{item.progress}</p>
 	                                <img src={item.imageSrc} style={divStyle}></img>
 	                            </article>
 	                        </div>
