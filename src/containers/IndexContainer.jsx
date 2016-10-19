@@ -72,16 +72,52 @@ let CustomerServiceMainUI = React.createClass({
         };
     },
 
+    componentDidMount: function() {
+        var self = this;
+        window.SiLinJSBridgeWeb = new Object();
+
+        window.SiLinJSBridgeWeb.chooseImageSuccess = function(url) {
+            console.log('chooseImageSuccess ' + url);
+            self.sendImageMessage(url);
+        };
+        window.SiLinJSBridgeWeb.uploadImageProgress = function(url, progress) {
+            console.log('uploadImageProgress ' + url + ' ' + progress);
+            self.updateProgress(url, progress);
+        };
+        window.SiLinJSBridgeWeb.uploadImageSuccess = function(url) {
+            console.log('uploadImageSuccess ' + url);
+            self.updateSuccess(url);
+        };
+        window.SiLinJSBridgeWeb.uploadImageError = function(url) {
+            console.log('uploadImageError ' + url);
+            self.updateSuccess(url);
+        };
+        // 自动结束
+        window.SiLinJSBridgeWeb.onVoiceRecordEnd = function (result) {
+            console.log('window.SiLinJSBridge.onVoiceRecordEnd:' + result);
+            if (result.length == 0) {
+                self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+            } else {
+                self.test(result);
+            }
+        };
+        // 手动结束
+        window.SiLinJSBridgeWeb.endRecording = function (result) {
+            console.log('window.SiLinJSBridge.onVoiceRecordEnd:' + result);
+            if (result.length == 0) {
+                self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+            } else {
+                self.test(result);
+            }
+        };
+    },
+
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.showPluginView !== prevState.showPluginView || this.state.showFaceView !== prevState.showFaceView ) {
             this.refs.iScroll.withIScroll(function(iScroll) {
                 iScroll.refresh();
             });
         }
-
-        // this.refs.iScroll.withIScroll(function(iScroll) {
-        //     iScroll.refresh();
-        // });
     },
 
     componentWillReceiveProps: function(nextProps) {
@@ -170,11 +206,6 @@ let CustomerServiceMainUI = React.createClass({
 				inputText: text
 			});
 		}
-
-
-		// this.setState({
-        //     inputText: text
-        // });
     },
     sendButtonClick: function(text) {
         this.setState({
@@ -243,27 +274,29 @@ let CustomerServiceMainUI = React.createClass({
     pluginItemClick: function(index) {
         // console.log('pluginItemClick');
         var self = this;
-        window.SiLinJSBridge.chooseImageWithTypeCallback(index, {
-            chooseImageSuccess: function(url) {
-                console.log('chooseImageSuccess ' + url);
-                // self.props.sendImageMessage(url);
-                self.sendImageMessage(url);
-            },
-            uploadImageProgress: function(url, progress) {
-                console.log('uploadImageProgress ' + url + ' ' + progress);
-                // self.props.uploadImageProgress(url, progress);
-                self.updateProgress(url, progress);
-            },
-            uploadImageSuccess: function(url) {
-                console.log('uploadImageSuccess ' + url);
-                // self.props.sendImageMessageSuccess(url);
-                self.updateSuccess(url);
-            },
-            uploadImageError: function(url) {
-                console.log('uploadImageError ' + url);
-                // self.props.sendImageMessageSuccess(url);
-            }
-        });
+        window.SiLinJSBridge.chooseImageWithType(index);
+
+        // window.SiLinJSBridge.chooseImageWithTypeCallback(index, {
+        //     chooseImageSuccess: function(url) {
+        //         console.log('chooseImageSuccess ' + url);
+        //         // self.props.sendImageMessage(url);
+        //         self.sendImageMessage(url);
+        //     },
+        //     uploadImageProgress: function(url, progress) {
+        //         console.log('uploadImageProgress ' + url + ' ' + progress);
+        //         // self.props.uploadImageProgress(url, progress);
+        //         self.updateProgress(url, progress);
+        //     },
+        //     uploadImageSuccess: function(url) {
+        //         console.log('uploadImageSuccess ' + url);
+        //         // self.props.sendImageMessageSuccess(url);
+        //         self.updateSuccess(url);
+        //     },
+        //     uploadImageError: function(url) {
+        //         console.log('uploadImageError ' + url);
+        //         // self.props.sendImageMessageSuccess(url);
+        //     }
+        // });
     },
     sendImageMessage: function (url, progress) {
         this.props.sendImageMessage(url, progress);
@@ -290,19 +323,19 @@ let CustomerServiceMainUI = React.createClass({
             isRecording: true,
             shouldCancel: false
         });
-        window.SiLinJSBridge.startRecording(function(){
-            console.log('window.SiLinJSBridge.startRecording');
-        });
 
-        var self = this;
-        window.SiLinJSBridge.onVoiceRecordEnd(function (result){
-            console.log('window.SiLinJSBridge.onVoiceRecordEnd: ' + result);
-            if (result.length == 0) {
-                self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
-            } else {
-                self.test(result);
-            }
-        });
+        console.log('window.SiLinJSBridge.startRecording');
+        window.SiLinJSBridge.startRecording();
+
+        // var self = this;
+        // window.SiLinJSBridge.onVoiceRecordEnd(function (result){
+        //     console.log('window.SiLinJSBridge.onVoiceRecordEnd: ' + result);
+        //     if (result.length == 0) {
+        //         self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+        //     } else {
+        //         self.test(result);
+        //     }
+        // });
     },
     endRecording: function() {
         this.setState({
@@ -310,15 +343,17 @@ let CustomerServiceMainUI = React.createClass({
             shouldCancel: false
         });
         var self = this;
-        window.SiLinJSBridge.endRecording(function(result){
-            console.log('window.SiLinJSBridge.endRecording: ' + result);
-
-            if (!result || result == 'null' || result.length == 0) {
-                self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
-            } else {
-                self.test(result);
-            }
-        });
+        console.log('window.SiLinJSBridge.endRecording');
+        window.SiLinJSBridge.endRecording();
+        // window.SiLinJSBridge.endRecording(function(result){
+        //     console.log('window.SiLinJSBridge.endRecording: ' + result);
+        //
+        //     if (!result || result == 'null' || result.length == 0) {
+        //         self.props.sendTextMessage('你不说话，我怎么知道你想要知道什么(请重新发送语音消息)');
+        //     } else {
+        //         self.test(result);
+        //     }
+        // });
     },
 
     test: function(result){
@@ -330,10 +365,8 @@ let CustomerServiceMainUI = React.createClass({
             isRecording: false,
             shouldCancel: false
         });
-
-        window.SiLinJSBridge.cancelRecording(function(){
-            console.log('window.SiLinJSBridge.cancelRecording');
-        });
+        console.log('window.SiLinJSBridge.cancelRecording');
+        window.SiLinJSBridge.cancelRecording();
     },
     tipChange: function(status) {
         this.setState({
@@ -485,11 +518,9 @@ let CustomerServiceMainUI = React.createClass({
 							}
 						}
  						txtContent.push(<img key={'b'+i} className="inline_emoji_content" style={{'width': '24px','height': '24px'}} src={src}/>);
-
 					}
  					txtContent.push(<span key={'b'+i}>{content}</span>);
 				} else {
-
 					txtContent.push(<span key={index}>{item.text}</span>);
 				}
 
