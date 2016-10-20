@@ -570,16 +570,17 @@ let CustomerServiceMainUI = React.createClass({
                     maxHeight: '150px'
                 };
                 console.log('item.progress ' + item.progress);
+
                 return (
 					<div  key={index}>
 						{timeCell}
 	                    <section className="message-wrap visitor " data-message-type="visitor">
-	                        <div className="message " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
+	                        <div className="message " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }} >
 	                            <div className="bubble-arrow " style={{"backgroundColor":"#A0E75A","borderColor":"#7CD053" }}>
 	                            </div>
-	                            <article className="ask-wrap ">
+	                            <article className="ask-wrap " onClick={self.imageCellClick.bind(null, index)} >
                                     <p>{item.progress}</p>
-	                                <img src={item.imageSrc} style={divStyle}></img>
+	                                <img src={item.imageSrc} style={divStyle} ></img>
 	                            </article>
 	                        </div>
 	                        <div className="visitor-avatar ">
